@@ -1,0 +1,390 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<header>
+    <div class="container wrapper">
+        <h1>
+            <a href="#">
+                <img
+                    src="{% static  '../static/images/logo.svg' %}"
+                    alt="Logo"
+                />
+            </a>
+        </h1>
+        <div class="right">
+            <!-- <button class="blueButton" id="create">
+                Create project
+            </button> -->
+            <div class="userDetails">
+                <div class="userImage">
+                    <img
+                        src="{% static '../static/images/user-image.png' %}"
+                        alt="User Image"
+                    />
+                </div>
+                <p class="userName">{{ current_user }}</p>
+                <div class="arrow">
+                    <img
+                        src="{% static '../static/images/dropdown.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div id="editProjectModal" class="editModal">
+    <div class="editModal-content">
+        <h4>Edit Project</h4>
+        <div class="field">
+            <label for="projectName">Project name</label>
+            <input type="text" placeholder="Enter project name" value="{{ singleProject.project_name }}"/>
+        </div>
+        <div class="field">
+            <label for="projectName">Description</label>
+            <input
+                type="text"
+                class="textInput"
+                placeholder="Type something about project..."
+                value="{{ singleProject.description }}"
+            />
+        </div>
+        <div class="field">
+            <label for="projectName">Select priority</label>
+            <span class="dropDownList"
+                ><input
+                    type="text"
+                    placeholder="Select project priority" 
+                    value="{{ singleProject.priority }}"
+                    />
+                <div class="downarrow">
+                    <img
+                        src="{% static '../static/images/arrow-down.svg' %}"
+                        alt="drop down arrow"
+                    /></div
+            ></span>
+        </div>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Assigning date</label>
+                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.assigned_date }}"/>
+            </div>
+
+            <div class="field">
+                <label for="projectName">Submission date</label>
+                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.submission_date }}"/>
+            </div>
+        </div>
+        <h6>Team details</h6>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Project category</label>
+                <span class="dropDownList"
+                    ><input type="text" placeholder="Select team" value="{{ singleProject.team }}"/>
+                    <div class="downarrow">
+                        <img
+                            src="{% static '../static/images/arrow-down.svg' %}"
+                            alt="drop down arrow"
+                        /></div
+                ></span>
+            </div>
+            <div class="field">
+                <label for="projectName">Team lead</label>
+                <span class="dropDownList"
+                    ><input
+                        type="text"
+                        placeholder="Select team lead"
+                        value="{{ singleProject.team_lead }}" />
+                    <div class="downarrow">
+                        <img
+                            src="{% static '../static/images/arrow-down.svg' %}"
+                            alt="drop down arrow"
+                        /></div
+                ></span>
+            </div>
+        </div>
+        <div class="field">
+            <label for="projectName">Assigned to</label>
+            <span class="dropDownList"
+                ><input type="text" placeholder="Select employee" value="{{ singleProject.employee_name }}" />
+                <div class="downarrow">
+                    <img
+                        src="{% static '../static/images/arrow-down.svg' %}"
+                        alt="drop down arrow"
+                    /></div
+            ></span>
+        </div>
+
+        <div class="createButtons">
+            <button class="close" id="projectCancel">cancel</button>
+            <button class="create" id="projectSave">Create</button>
+        </div>
+    </div>
+</div>
+<div id="infoModalContainer" class="infoModal">
+    <div class="infomodal-content">
+        <div class="closeIcon" id="close">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>info</h4>
+        <div class="field">
+            <label for="projectName">Updated by</label>
+            <input
+                type="text"
+                placeholder="Updated by"
+                value="Aromal sajeevan"
+            />
+        </div>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Updated on</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="03.03.2024"
+                />
+            </div>
+            <div class="field">
+                <label for="projectName">Current status</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="On progress"
+                />
+            </div>
+        </div>
+        <div class="field">
+            <label for="projectName">Description</label>
+            <textarea
+                type="text"
+                placeholder="Description"
+                class="inputFIeld"
+                rows="3"
+            >
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</textarea
+            >
+        </div>
+    </div>
+</div>
+
+<div id="updateModalContainer" class="updateModal">
+    <div class="update-content">
+        <div class="closeIcon" id="updateClose">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>Project updating</h4>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Project name</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="iLM Web app development"
+                />
+            </div>
+            <div class="field">
+                <label for="projectName">Priority</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="Urgent"
+                />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="projectName">Update Description</label>
+            <textarea
+                type="text"
+                placeholder="Add description..."
+                class="textField"
+                rows="3"
+            ></textarea
+            >
+        </div>
+        
+        <div class="field">
+            <label for="projectName">Select priority</label>
+            <span class="dropDownList"
+                ><input
+                    type="text"
+                    placeholder="Select project priority"
+                    value="On progress" />
+                <div class="downarrow">
+                    <img
+                        src="{% static '../static/images/arrow-down.svg' %}"
+                        alt="drop down arrow"
+                    /></div
+            ></span>
+        </div>
+        <div class="updateButtons">
+            <button class="updateClose" id="updateCancel">cancel</button>
+            <button class="updateCreate" id="UpdateSave">Update</button>
+        </div>
+    </div>
+</div>
+
+<div id="logoutModal" class="logoutModal">
+    <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
+        {% csrf_token %}
+        <h4>Logout</h4>
+        <p>Are you sure want to logout ?</p>
+        <div class="createButtons">
+            <button class="close" id="logoutcancel">cancel</button>
+            <button class="create" id="logoutsave">Logout</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="container">
+    <nav>
+        <ul>
+            <li class="nav-item">
+                <a href="dashboard"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            alt="Dashboard Icon"
+                        />
+                    </div>
+                    Dashboard</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="/employee/projects?status=all"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Projects</a
+                >
+            </li>
+        </ul>
+        <div class="logout" id="logoutButton">
+            <a href="#"
+                ><div class="icon">
+                    <img
+                        src="{% static 'images/dark-logout-icon.svg' %}"
+                        alt="Logout Icon"
+                    />
+                </div>
+                Logout
+            </a>
+        </div>
+    </nav>
+    <div class="content">
+<section id="employeeDashboard">
+    <h4>Dashboard</h4>
+    <div class="dashboardCards">
+        <div class="card">
+            <div class="left">
+                <div class="iconFrame">
+                    <img
+                        src="{% static '/images/dashboard-card-icon.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <div class="right">
+                <p class="miniTitle">Total projects</p>
+                <p class="count">{{ all_projects_count }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="left">
+                <div class="iconFrame">
+                    <img
+                        src="{% static '/images/dashboard-card-icon.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <div class="right">
+                <p class="miniTitle">Completed projects</p>
+                <p class="count">{{ completed_projects_count }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="left">
+                <div class="iconFrame">
+                    <img
+                        src="{% static '/images/dashboard-card-icon.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <div class="right">
+                <p class="miniTitle">Project in progress</p>
+                <p class="count">{{ progress_projects_count }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="left">
+                <div class="iconFrame">
+                    <img
+                        src="{% static '/images/dashboard-card-icon.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+            <div class="right">
+                <p class="miniTitle">Projects overdue</p>
+                <p class="count">{{ overdue_projects_count }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="subTitle assigned">
+        <p class="subTitletext">Today assigned projects</p>
+    </div>
+    <div class="todayAssigned">
+        <table class="tableStyle todayAssignedTableStyle">
+            <thead>
+                <th>SI NO</th>
+                <th>Project name</th>
+                <th>Project status</th>
+                <th>Project priority</th>
+                <th>Due date</th>
+            </thead>
+            <tbody>
+                {% for today_assigned in today_assigned_projects %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ today_assigned.project.name }}</td>
+                    <td>{{ today_assigned.get_project_status_display }}</td>
+                    <td class="high">{{ today_assigned.priority }}</td>
+                    <td>{{ today_assigned.due_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+</div>
+</div>
+<script>
+    const logoutModal = document.getElementById("logoutModal");
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutSave = document.getElementById("logoutsave");
+    const logoutCancel = document.getElementById("logoutcancel");
+
+    logoutButton.onclick = () => {
+        logoutModal.style.display = "block";
+    }
+
+    logoutCancel.onclick = () => {
+        logoutModal.style.display = "none";
+    };
+
+    logoutSave.onclick = () => {
+        logoutModal.style.display = "none";
+        window.location.href = "/";
+    };
+</script>
+{% endblock %}

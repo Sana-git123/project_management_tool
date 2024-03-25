@@ -1,0 +1,286 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<header>
+    <div class="container wrapper">
+        <h1>
+            <a href="#">
+                <img
+                    src="{% static  '../static/images/logo.svg' %}"
+                    alt="Logo"
+                />
+            </a>
+        </h1>
+        <div class="right">
+            <div class="userDetails">
+                <div class="userImage">
+                    <img
+                        src="{% static '../static/images/user-image.png' %}"
+                        alt="User Image"
+                    />
+                </div>
+                <p class="userName">{{ current_user }}</p>
+                <div class="arrow">
+                    <img
+                        src="{% static '../static/images/dropdown.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div id="updateModalContainer" class="updateModal">
+    <form 
+        id="update-modal"
+        method="post"
+        class="update-content"
+    >
+        {%csrf_token%}
+        <div class="closeIcon" id="updateClose">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>Project updating</h4>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Project name</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    id="project-name-input"
+                />
+            </div>
+            <div class="field">
+                <label for="projectName">Priority</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    id="priority-input"
+                />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="projectName">Update Description</label>
+            <textarea
+                type="text"
+                placeholder="Add description..."
+                class="textField"
+                rows="3"
+                name="description"
+                id="description-input"
+            ></textarea
+            >
+        </div>
+        
+        <div class="field">
+            <label for="progress-input">Select progress</label>
+            <span class="dropDownList"
+                >
+                <select id="progress-input" name="project_status"
+                >
+                    <option value="on_progress">On progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="to_do">To do</option>
+                    <option value="over_due">Overdue</option>
+                </select>
+            </span>
+        </div>
+        <div class="updateButtons">
+            <button class="updateClose" id="updateCancel">cancel</button>
+            <button class="updateCreate" type="update" id="UpdateSave">Update</button>
+        </div>
+    </form>
+</div>
+
+<div id="logoutModal" class="logoutModal">
+    <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
+        {% csrf_token %}
+        <h4>Logout</h4>
+        <p>Are you sure want to logout ?</p>
+        <div class="createButtons">
+            <button class="close" id="logoutcancel">cancel</button>
+            <button class="create" id="logoutsave">Logout</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="container">
+    <nav>
+        <ul>
+            <li class="nav-item">
+                <a href="dashboard"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            alt="Dashboard Icon"
+                        />
+                    </div>
+                    Dashboard</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="/employee/projects?status=all"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Projects</a
+                >
+            </li>
+        </ul>
+        <div class="logout" id="logoutButton">
+            <a href="#"
+                ><div class="icon">
+                    <img
+                        src="{% static 'images/dark-logout-icon.svg' %}"
+                        alt="Logout Icon"
+                    />
+                </div>
+                Logout
+            </a>
+        </div>
+    </nav>
+    <div class="content">
+<section id="employeeProject">
+    <h4>Projects</h4>
+    <ul>
+        <li class="active"><a href="/employee/projects?status=all">All projects</a></li>
+        <li><a href="?status=completed">Completed projects</a></li>
+        <li><a href="?status=in-progress">Project in progress</a></li>
+        <li><a href="?status=overdue">Projects overdue</a></li>
+    </ul>
+    <div class="projects">
+        <table class="tableStyle projectTableStyle" id="employeeProjectTable">
+            <thead>
+                <th>SI NO</th>
+                <th>Project name</th>
+                <th class="centre">Assigned date</th>
+                <th class="centre">Submission date</th>
+                <th class="centre">Current status</th>
+                <th class="centre">Priority</th>
+                <th class="right">Action</th>
+            </thead>
+            <tbody>
+                {% for employee_project in all_projects %}
+                <tr id="{{ employee_project.id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ employee_project.project.name }}</td>
+                    <td class="centre">{{ employee_project.assign_date }}</td>
+                    <td class="centre">{{ employee_project.due_date }}</td>
+                    <td class="centre">{{ employee_project.get_project_status_display }}</td>
+                    <td class="centre">{{ employee_project.priority }}</td>
+                    <td class="right" id="updateButton">
+                        <button
+                            class="projectUpdate" 
+                            data-priority="{{employee_project.priority}}"
+                            data-employee-project-id="{{employee_project.pk}}"
+                            data-description="{{employee_project.description}}"
+                            data-progress="{{employee_project.project_status}}"
+                            data-project-name="{{employee_project.project.name}}"
+                        >
+                        update
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="paginationContainer">
+            <div class="text">Showing 1 to 10 User's</div>
+            <div class="paginationNav">
+                <button id="prevBtn">&lt;</button>
+                <div id="pagination" class="pagination"></div>
+                <button id="nextBtn">&gt;</button> 
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+</div>
+<script>
+    const logoutModal = document.getElementById("logoutModal");
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutSave = document.getElementById("logoutsave");
+    const logoutCancel = document.getElementById("logoutcancel");
+
+    logoutButton.onclick = () => {
+        logoutModal.style.display = "block";
+    }
+
+    logoutCancel.onclick = () => {
+        logoutModal.style.display = "none";
+    };
+
+    logoutSave.onclick = () => {
+        logoutModal.style.display = "none";
+        window.location.href = "/";
+    };
+
+    //active class
+    function handleListItemClick(event) {
+        const listItems = document.querySelectorAll("#employeeProject ul li");
+        listItems.forEach(item => {
+            item.classList.remove("active");
+        });
+        event.target.parentElement.classList.add("active");
+    }
+    const listItems = document.querySelectorAll("#employeeProject ul li");
+    listItems.forEach(item => {
+        item.addEventListener("click", handleListItemClick);
+    });
+
+    const updateButton = document.getElementById("updateProject");
+    const updateModal = document.getElementById("updateModalContainer");
+    const updateClose = document.getElementById("updateClose");
+    const updateCancel = document.getElementById("updateCancel");
+    const updateSave = document.getElementById("updateSave");
+    const rowUpdateButton =  document.getElementById("updateButton");
+    const rowUpdateButtons = document.querySelectorAll(".projectUpdate");
+
+    rowUpdateButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.stopPropagation();
+            updateModal.style.display = "block";
+            const employeeProjectID = button.getAttribute("data-employee-project-id")
+
+            const priority = button.getAttribute("data-priority")
+            const description = button.getAttribute("data-description")
+            const progress = button.getAttribute("data-progress")
+            const projectName = button.getAttribute("data-project-name")
+
+            const nameInput = document.querySelector("#project-name-input")
+            const prioritInput = document.querySelector("#priority-input")
+            const descriptionInput = document.querySelector("#description-input")
+            const progressInput = document.querySelector("#progress-input")
+
+            const form = document.querySelector("form#update-modal")
+
+            form.action = `/employee/projects/update/${employeeProjectID}?redirection_uri=/employee/projects?status=all`
+            form.method = "post"
+
+            nameInput.value = projectName
+            prioritInput.value = priority
+            descriptionInput.value = description
+            progressInput.value = progress
+            
+        })
+    });
+    updateClose.onclick = function () {
+        updateModal.style.display = "none";
+    };
+    updateCancel.onclick = function () {
+        updateModal.style.display = "none";
+    };
+    updateSave.onclick = function () {
+        updateModal.style.display = "none";
+    };
+
+    
+</script>
+{% endblock %}

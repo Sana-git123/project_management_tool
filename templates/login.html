@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="{% static '../static/css/style.css' %}" />
+        <link rel="stylesheet" href="{% static '../static/css/font.css' %}">
+    </head>
+    <body>
+        <section id="login">
+            <div class="left"></div>
+            <div class="right">
+                <div class="rightContent">
+                    <div class="logo">
+                        <img
+                            src="{% static '../static/images/logo.svg' %}"
+                            alt="logo"
+                        />
+                    </div>
+
+                    <form method="POST" class="signIn" id="loginForm">
+                        {% csrf_token %}
+                        <p class="welcome">Welcome back !</p>
+                        <p class="title">Login to your Account</p>
+                        <div class="field">
+                            <label for="number">Mobile number</label>
+                            <input
+                                type="tel"
+                                placeholder="Enter mobile number"
+                                name="username"
+                                required
+                            />
+                        </div>
+                        <div class="field">
+                            <label for="passsword">Password</label>
+                            <input
+                                type="password"
+                                placeholder="Enter  password"
+                                name="password"
+                                required
+                            />
+                        </div>
+                        
+                        <span>
+                            <button class="loginButton" type="submit" id="loginButton">Login</button>
+                            <!-- <a class="loginButton" type="submit" id="loginButton" href="project-manager/dashboard">Login</a> -->
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+        <!-- {% if message %} -->
+        <!-- <script>
+            swal(
+                "Success!",
+                "Your form has been submitted successfully!",
+                "success"
+            );
+        </script>
+        {% else %} -->
+        <!-- <script>
+            swal(
+                "Failed!",
+                "Login failed!",
+                "error"
+            );
+        </script>
+        {% endif %} -->
+
+        {% if message %}
+    <script>
+        swal("Failed!", "{{ message }}", "error");
+    </script>
+    {% endif %}
+    </body>
+</html>

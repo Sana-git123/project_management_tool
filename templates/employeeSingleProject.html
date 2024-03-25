@@ -1,0 +1,242 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<header>
+    <div class="container wrapper">
+        <h1>
+            <a href="#">
+                <img
+                    src="{% static  '../static/images/logo.svg' %}"
+                    alt="Logo"
+                />
+            </a>
+        </h1>
+        <div class="right">
+            <div class="userDetails">
+                <div class="userImage">
+                    <img
+                        src="{% static '../static/images/user-image.png' %}"
+                        alt="User Image"
+                    />
+                </div>
+                <p class="userName">{{ current_user }}</p>
+                <div class="arrow">
+                    <img
+                        src="{% static '../static/images/dropdown.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div id="updateModalContainer" class="updateModal">
+    <form class="update-content" action="{% url 'update' id=singleEmployeeProject.id %}" method="POST">
+        {% csrf_token %}
+        <div class="closeIcon" id="updateClose">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>Project updating</h4>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Project name</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="{{ singleEmployeeProject.project.name }}"
+                />
+            </div>
+            <div class="field">
+                <label for="projectName">Priority</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="{{ singleEmployeeProject.priority }}"
+                />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="projectName">Update Description</label>
+            <textarea
+                type="text"
+                placeholder="Add description..."
+                class="textField"
+                rows="3"
+                name="description"
+                
+            >
+            </textarea>
+        </div>
+
+        <div class="field">
+            <label for="projectName">Progress</label>
+            <span class="dropDownList">
+                <select id="projectPriority" name="project_status" class="selectList">
+                    <option value="on_progress" >On progress</option>
+                    <option value="completed" >Completed</option>
+                    <option value="to_do" >To do</option>
+                    <option value="paused" >Paused</option>
+                    <option value="over_due" >Overdue</option>
+                </select>
+            </span>
+        </div>
+        <div class="updateButtons">
+            <button class="close updateClose" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <button class="updateCreate" id="UpdateSave">Update</button>
+        </div>
+    </form>
+</div>
+
+<div id="logoutModal" class="logoutModal">
+    <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
+        {% csrf_token %}
+        <h4>Logout</h4>
+        <p>Are you sure want to logout ?</p>
+        <div class="createButtons">
+            <button class="close" id="logoutcancel">cancel</button>
+            <button class="create" id="logoutsave">Logout</button>
+        </div>
+    </form>
+</div>
+
+<div id="container">
+    <nav>
+        <ul>
+            <li class="nav-item">
+                <a href="dashboard"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            alt="Dashboard Icon"
+                        />
+                    </div>
+                    Dashboard</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="projects"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Projects</a
+                >
+            </li>
+        </ul>
+        <div class="logout" id="logoutButton">
+            <a href="#"
+                ><div class="icon">
+                    <img
+                        src="{% static 'images/dark-logout-icon.svg' %}"
+                        alt="Logout Icon"
+                    />
+                </div>
+                Logout
+            </a>
+        </div>
+    </nav>
+    <div class="content">
+        <section id="employeeSingleProject">
+            <h4>{{ singleEmployeeProject.project.name}}</h4>
+            <ul>
+                <li><a href="/employee/project">Projects</a></li>
+                <li>&nbsp;/&nbsp;</li>
+                <li>
+                    <a href="/employee/project/update">Project single</a>
+                </li>
+            </ul>
+            <div class="center">
+                <div class="content">
+                    <div class="contentTitle">
+                        <h3 class="projectTitle">Project details</h3>
+                        <button class="edit" id="updateProject">Update</button>
+                    </div>
+                    <div class="titlePair">
+                        <p class="titleLabel">Project name</p>
+                        <p class="titleContent">
+                            {{ singleEmployeeProject.project.name }}
+                        </p>
+                    </div>
+                    <div class="titlePair">
+                        <p class="titleLabel">Project description</p>
+                        <p class="titleContent">
+                            {{ singleEmployeeProject.description }}
+                        </p>
+                    </div>
+                    <div class="fullWidth">
+                        <div class="titlePair">
+                            <p class="titleLabel">Priority</p>
+                            <p class="titleContent">
+                                {{ singleEmployeeProject.priority }}
+                            </p>
+                        </div>
+                        <div class="titlePair">
+                            <p class="titleLabel">progress</p>
+                            <p class="titleContent">
+                                {{ singleEmployeeProject.get_project_status_display }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="fullWidth">
+                        <div class="titlePair">
+                            <p class="titleLabel">Assigned date</p>
+                            <p class="titleContent">
+                                {{ singleEmployeeProject.assign_date }}
+                            </p>
+                        </div>
+                        <div class="titlePair">
+                            <p class="titleLabel">Due date</p>
+                            <p class="titleContent">
+                                {{ singleEmployeeProject.due_date }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<script>
+
+    const logoutModal = document.getElementById("logoutModal");
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutSave = document.getElementById("logoutsave");
+    const logoutCancel = document.getElementById("logoutcancel");
+
+    logoutButton.onclick = () => {
+        logoutModal.style.display = "block";
+    }
+
+    logoutCancel.onclick = () => {
+        logoutModal.style.display = "none";
+    };
+
+    logoutSave.onclick = () => {
+        logoutModal.style.display = "none";
+        window.location.href = "/";
+    };
+
+    const updateButton = document.getElementById("updateProject");
+    const updateModal = document.getElementById("updateModalContainer");
+    const updateClose = document.getElementById("updateClose");
+    const updateCancel = document.getElementById("updateCancel");
+    const updateSave = document.getElementById("updateSave");
+    updateButton.onclick = function () {
+        updateModal.style.display = "block";
+    };
+    updateClose.onclick = function () {
+        updateModal.style.display = "none";
+    };
+    updateCancel.onclick = function () {
+        updateModal.style.display = "none";
+    };
+    updateSave.onclick = function () {
+        updateModal.style.display = "none";
+    };
+</script>
+{% endblock %}

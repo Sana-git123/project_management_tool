@@ -1,0 +1,485 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<header>
+    <div class="container wrapper">
+        <h1>
+            <a href="#">
+                <img
+                    src="{% static  '../static/images/logo.svg' %}"
+                    alt="Logo"
+                />
+            </a>
+        </h1>
+        <div class="right">
+            <button class="blueButton" id="create">
+                Create project
+            </button>
+            <div class="userDetails">
+                <div class="userImage">
+                    <img
+                        src="{% static '../static/images/user-image.png' %}"
+                        alt="User Image"
+                    />
+                </div>
+                <p class="userName">{{ current_user }}</p>
+                <div class="arrow">
+                    <img
+                        src="{% static '../static/images/dropdown.svg' %}"
+                        alt=""
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div id="createProjectModal" class="modal">
+    <form class="modal-content" action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
+        <h4>Create Project</h4>
+        <div class="field">
+            <label for="projectName">Project name</label>
+            <input type="text" placeholder="Enter project name" name="project_name" />
+        </div>
+        <div class="field">
+            <label for="projectName">Description</label>
+            <input
+                type="text"
+                class="textInput"
+                placeholder="Type something about project..."
+                name="description"
+            />
+        </div>
+        <div class="field">
+            <label for="projectName">Select priority</label>
+            <span class="dropDownList"
+                >
+                <select id="projectPriority" name="project_priority">
+                    <option value="urgent" >Urgent</option>
+                    <option value="high" >High</option>
+                    <option value="normal">Normal</option>
+                    <option value="low" >Low</option>
+                </select>
+            </span>
+        </div>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Start Date</label>
+                <input type="text" placeholder="YYYY-MM-DD HH:MM" name="start_date" />
+            </div>
+
+            <div class="field">
+                <label for="projectName">Submission Date</label>
+                <input type="text" placeholder="YYYY-MM-DD HH:MM" name="submission_date" />
+            </div>
+        </div>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Client Name</label>
+                <input type="text" placeholder="client name" name="client_name" />
+            </div>
+            <div class="field">
+                <label for="projectName">Client email</label>
+                <input type="text" placeholder="client email" name="client_email" />
+            </div>
+         </div>
+         
+        <h6>Team details</h6>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Team lead</label>
+                <span class="dropDownList"
+                    >
+                    <select id="teamLead" name="team_lead">
+                        {% for employee in employees %}
+                            <option value="{{employee.id}}">{{ employee.name }}</option>
+                        {% endfor %}
+                    </select>
+                </span>
+            </div>
+        </div>
+        <div class="createButtons">
+            <!-- <button class="close" id="cancelCreate">cancel</button> -->
+            <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <button class="create" id="save" type="submit">Create</button>
+        </div>
+    </form>
+</div>
+<div id="taskProjectModal" class="taskModal">
+    <form class="task-modal-content" action="{% url 'task' %}" method="POST">
+        {% csrf_token %}
+        <h4>Create Task</h4>
+        <div class="field">
+            <label for="projectName">Project name</label>
+            <select id="assigneto" name="project_name" class="dropDownList" >
+                {% for project in projects %}
+                    <option value="{{ project.id }}">{{ project.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="projectName">Description</label>
+            <input
+                type="text"
+                class="textInput"
+                placeholder="Type something about project..."
+                name="description"
+            />
+        </div>
+        <div class="field">
+            <label for="projectName">Select priority</label>
+            <span class="dropDownList"
+                >
+                <select id="projectPriority" name="task_priority">
+                    <option value="urgent" >Urgent</option>
+                    <option value="high" >High</option>
+                    <option value="normal">Normal</option>
+                    <option value="low" >Low</option>
+                </select>
+            </span>
+        </div>
+        <div class="twoFields">
+            <div class="field">
+                <label for="projectName">Assigning date</label>
+                <input type="text" placeholder="YYYY-MM-DD HH:MM" name="assign_date" />
+            </div>
+
+            <div class="field">
+                <label for="projectName">Submission date</label>
+                <input type="text" placeholder="YYYY-MM-DD HH:MM" name="due_date" />
+            </div>
+        </div>
+        <div class="field">
+            <label for="projectName">Assigned to</label>
+            <span class="dropDownList"
+                >
+                <select id="assigneto" name="assigned_to">
+                    {% for employee in employees %}
+                        <option value="{{ employee.id }}">{{ employee }}</option>
+                    {% endfor %}
+                </select>
+            </span>
+        </div>
+
+        <div class="createButtons">
+            <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <!-- <button class="close" id="closeTask">Cancel</button> -->
+            <button class="create" id="save" type="submit">Create</button>
+        </div>
+    </form>
+</div>
+<div id="infoModalContainer" class="infoModal">
+    <div class="infomodal-content">
+        <div class="closeIcon" id="close">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>info</h4>
+        <div class="field">
+            <label for="projectName">Updated by</label>
+            <span id="updated_by"></span>
+            <!-- <input
+                type="text"
+                placeholder="Updated by"
+                name="updated-by"
+            /> -->
+        </div>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Updated on</label>
+                <span id="updated_on"></span>
+                <!-- <input
+                    type="text"
+                    placeholder="Updated on"
+                    name="updatedon"
+                    
+                /> -->
+            </div>
+            <div class="field">
+                <label for="projectName">Current status</label>
+                <span id="project_status"></span>
+                <!-- <input
+                    type="text"
+                    placeholder="Updated by"
+                    name="current-status"
+                /> -->
+            </div>
+        </div>
+        <div class="field">
+            <label for="projectName">Description</label>
+            <span id="description"></span>
+            <!-- <textarea
+                type="text"
+                placeholder="Description"
+                class="inputFIeld"
+                rows="3"
+                name="description"
+            >
+            </textarea> -->
+        </div>
+    </div>
+</div>
+
+<div id="updateModalContainer" class="updateModal">
+    <div class="update-content">
+        <div class="closeIcon" id="updateClose">
+            <img
+                src="{% static '../static/images/Close.svg' %}"
+                alt="close icon"
+            />
+        </div>
+        <h4>Project updating</h4>
+        <div class="twoField">
+            <div class="field">
+                <label for="projectName">Project name</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="iLM Web app development"
+                />
+            </div>
+            <div class="field">
+                <label for="projectName">Priority</label>
+                <input
+                    type="text"
+                    placeholder="Updated by"
+                    value="Urgent"
+                />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="projectName">Update Description</label>
+            <textarea
+                type="text"
+                placeholder="Add description..."
+                class="textField"
+                rows="3"
+            ></textarea
+            >
+        </div>
+        
+        <div class="field">
+            <label for="projectName">Select priority</label>
+            <span class="dropDownList"
+                ><input
+                    type="text"
+                    placeholder="Select project priority"
+                    value="On progress" />
+                <div class="downarrow">
+                    <img
+                        src="{% static '../static/images/arrow-down.svg' %}"
+                        alt="drop down arrow"
+                    /></div
+            ></span>
+        </div>
+        <div class="updateButtons">
+            <button class="updateClose" id="updateCancel">cancel</button>
+            <button class="updateCreate" id="UpdateSave">Update</button>
+        </div>
+    </div>
+</div>
+
+<div id="logoutModal" class="logoutModal">
+    <!-- <div class="logoutModal-content">
+        <h4>Logout</h4>
+        <p>Are you sure want to logout ?</p>
+        <div class="createButtons">
+            <button class="close" id="logoutcancel">cancel</button>
+            <button class="create" id="logoutsave">Logout</button>
+        </div>
+    </div> -->
+    <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
+        {% csrf_token %}
+        <h4>Logout</h4>
+        <p>Are you sure want to logout ?</p>
+        <div class="createButtons">
+            <button class="close" id="logoutcancel">cancel</button>
+            <button class="create" id="logoutsave">Logout</button>
+        </div>
+    </form>
+</div>
+
+
+<div id="container">
+    <nav>
+        <ul>
+            <li class="nav-item">
+                <a href="dashboard"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            alt="Dashboard Icon"
+                        />
+                    </div>
+                    Dashboard</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="projects?status=all"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/dark-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Projects</a
+                >
+            </li>
+        </ul>
+        <div class="logout" id="logoutButton">
+            <a href="#"
+                ><div class="icon">
+                    <img
+                        src="{% static 'images/dark-logout-icon.svg' %}"
+                        alt="Logout Icon"
+                    />
+                </div>
+                Logout
+            </a>
+        </div>
+    </nav>
+    <div class="content">
+<section id="project">
+    <span class="head">
+        <h4>Projects</h4>
+        <button class="taskButton" id="newTask">Create Task</button>
+    </span>
+    <ul>
+        <li class="active"><a href="/project-manager/projects?status=all">All projects</a></li>
+        <li><a href="?status=completed">Completed projects</a></li>
+        <li><a href="?status=in-progress">Project in progress</a></li>
+        <li><a href="?status=overdue">Projects overdue</a></li>
+    </ul>
+    <div class="projectTable">
+        <table class="tableStyle projectTableStyle" id="userTable">
+            <thead>
+                <th>SI NO</th>
+                <th>Project name</th>
+                <th class="centre">Employee name</th>
+                <th class="centre">Assigned date</th>
+                <th class="centre">Submission date</th>
+                <th class="right">Current status</th>
+                <th class="right">Priority</th>
+            </thead>
+            <tbody>
+                {% for project in all_projects %}
+                <tr id="{{ project.id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ project.project.name }}</td>
+                    <td class="centre">{{ project.employee.name }}</td>
+                    <td class="centre">{{ project.assign_date }}</td>
+                    <td class="centre">{{ project.due_date }}</td>
+                    <td class="right info" data-projectID="{{ project.id }}" name="info-button">
+                        info 
+                        <div class="infoFrame">
+                            <img src="../static/images/info-icon.svg" alt="info button">
+                        </div>
+                    </td>
+                    <td class="right" id="priority">{{ project.get_priority_display }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="paginationContainer">
+            <div class="text">Showing 1 to 10 User's</div>
+            <div class="paginationNav">
+                <button id="prevBtn">&lt;</button> <!-- Previous button -->
+                <div id="pagination" class="pagination"></div>
+                <button id="nextBtn">&gt;</button> <!-- Next button -->
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+</div>
+<script>
+
+    const logoutModal = document.getElementById("logoutModal");
+    const logoutButton = document.getElementById("logoutButton");
+    const logoutSave = document.getElementById("logoutsave");
+    const logoutCancel = document.getElementById("logoutcancel");
+
+    logoutButton.onclick = () => {
+        logoutModal.style.display = "block";
+    }
+
+    logoutCancel.onclick = () => {
+        logoutModal.style.display = "none";
+    };
+
+    logoutSave.onclick = () => {
+        logoutModal.style.display = "none";
+        window.location.href = "/";
+    };
+
+    const infoModal = document.getElementById("infoModalContainer");
+    const closeInfo = document.getElementById("close");
+    const infoButtons = document.querySelectorAll(".info");
+
+    closeInfo.onclick = function () {
+        infoModal.style.display = "none";
+    };
+
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
+        const year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    }
+
+    const fetchProjectInfo = async (projectId="")=>{
+        try {
+            const res = await fetch(`/project-manager/projects/info/${projectId}`)
+            const data = await res.json()
+
+            if(data){
+                const updated_by = document.getElementById("updated_by")
+                const updated_on = document.getElementById("updated_on")
+                const project_status = document.getElementById("project_status")
+                const description = document.getElementById("description")
+
+                updated_by.innerText = data.updated_by
+                updated_on.innerText = formatDate(new Date(data.updated_on))
+                project_status.innerText = data.current_status
+                description.innerText = data.description
+            }
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    infoButtons.forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.stopPropagation();
+            const projectID = button.getAttribute("data-projectID")
+
+            fetchProjectInfo(projectID);
+
+            infoModal.style.display = "block";
+        })}
+    );
+
+</script>
+<script>
+    document.getElementById("cancelCreate").addEventListener("click", function() {
+        window.location.href = "{% url 'cancel_url' %}";
+    });
+    
+    // function handleListItemClick(event) {
+    //     const listItems = document.querySelectorAll("#project ul li");
+    //     listItems.forEach(item => {
+    //         item.classList.remove("active");
+    //     });
+    //     event.target.parentElement.classList.add("active");
+    // }
+    // const listItems = document.querySelectorAll("#project ul li");
+    // listItems.forEach(item => {
+    //     item.addEventListener("click", handleListItemClick);
+    // });
+</script>
+<script src="{% static '../static/js/projectManager.js' %}"></script>
+
+{% endblock %}
