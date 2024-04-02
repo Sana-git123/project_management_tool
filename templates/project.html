@@ -97,8 +97,8 @@
             </div>
         </div>
         <div class="createButtons">
-            <!-- <button class="close" id="cancelCreate">cancel</button> -->
-            <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <button class="close" id="cancelCreate" type="button">cancel</button>
+            <!-- <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button> -->
             <button class="create" id="save" type="submit">Create</button>
         </div>
     </form>
@@ -160,8 +160,7 @@
         </div>
 
         <div class="createButtons">
-            <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
-            <!-- <button class="close" id="closeTask">Cancel</button> -->
+            <button class="close" type="button" id="taskCancel" >Cancel</button>
             <button class="create" id="save" type="submit">Create</button>
         </div>
     </form>
@@ -178,44 +177,20 @@
         <div class="field">
             <label for="projectName">Updated by</label>
             <span id="updated_by"></span>
-            <!-- <input
-                type="text"
-                placeholder="Updated by"
-                name="updated-by"
-            /> -->
         </div>
         <div class="twoField">
             <div class="field">
                 <label for="projectName">Updated on</label>
                 <span id="updated_on"></span>
-                <!-- <input
-                    type="text"
-                    placeholder="Updated on"
-                    name="updatedon"
-                    
-                /> -->
             </div>
             <div class="field">
                 <label for="projectName">Current status</label>
                 <span id="project_status"></span>
-                <!-- <input
-                    type="text"
-                    placeholder="Updated by"
-                    name="current-status"
-                /> -->
             </div>
         </div>
         <div class="field">
             <label for="projectName">Description</label>
             <span id="description"></span>
-            <!-- <textarea
-                type="text"
-                placeholder="Description"
-                class="inputFIeld"
-                rows="3"
-                name="description"
-            >
-            </textarea> -->
         </div>
     </div>
 </div>
@@ -274,21 +249,13 @@
             ></span>
         </div>
         <div class="updateButtons">
-            <button class="updateClose" id="updateCancel">cancel</button>
+            <button class="updateClose" id="updateCancel" type="button">cancel</button>
             <button class="updateCreate" id="UpdateSave">Update</button>
         </div>
     </div>
 </div>
 
 <div id="logoutModal" class="logoutModal">
-    <!-- <div class="logoutModal-content">
-        <h4>Logout</h4>
-        <p>Are you sure want to logout ?</p>
-        <div class="createButtons">
-            <button class="close" id="logoutcancel">cancel</button>
-            <button class="create" id="logoutsave">Logout</button>
-        </div>
-    </div> -->
     <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
         {% csrf_token %}
         <h4>Logout</h4>
@@ -413,6 +380,12 @@
         window.location.href = "/";
     };
 
+    const cancelCreate = document.getElementById("cancelCreate")
+    const createProjectModal = document.getElementById("createProjectModal")
+    const updateCancel = document.getElementById("updateCancel")
+    const updateModalContainer = document.getElementById("updateModalContainer")
+    const taskCancel = document.getElementById("taskCancel")
+    const taskProjectModal = document.getElementById("taskProjectModal")
     const infoModal = document.getElementById("infoModalContainer");
     const closeInfo = document.getElementById("close");
     const infoButtons = document.querySelectorAll(".info");
@@ -420,6 +393,16 @@
     closeInfo.onclick = function () {
         infoModal.style.display = "none";
     };
+
+    cancelCreate.onclick = () => {
+        createProjectModal.style.display = "none";
+    }
+    updateCancel.onclick = () => {
+        updateModalContainer.style.display = "none";
+    }
+    taskCancel.onclick = () => {
+        taskProjectModal.style.display = "none";
+    }
 
     function formatDate(date) {
         const day = String(date.getDate()).padStart(2, '0');
@@ -461,24 +444,7 @@
             infoModal.style.display = "block";
         })}
     );
-
-</script>
-<script>
-    document.getElementById("cancelCreate").addEventListener("click", function() {
-        window.location.href = "{% url 'cancel_url' %}";
-    });
     
-    // function handleListItemClick(event) {
-    //     const listItems = document.querySelectorAll("#project ul li");
-    //     listItems.forEach(item => {
-    //         item.classList.remove("active");
-    //     });
-    //     event.target.parentElement.classList.add("active");
-    // }
-    // const listItems = document.querySelectorAll("#project ul li");
-    // listItems.forEach(item => {
-    //     item.addEventListener("click", handleListItemClick);
-    // });
 </script>
 <script src="{% static '../static/js/projectManager.js' %}"></script>
 

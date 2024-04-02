@@ -142,13 +142,13 @@ header .container .right .blueButton::after {
 
 .updateModal .update-content {
     background-color: #fafcff;
-
-    margin: 12% auto;
+    margin: 50vh auto;
+    transform: translateY(-50%);
     padding: 30px;
     border: 1px solid #e4e4e4;
     width: 40%;
     border-radius: 6px;
-    height: 60vh;
+    height: max-content;
     position: relative;
 }
 .updateModal .closeIcon {
@@ -317,12 +317,13 @@ header .container .right .blueButton::after {
 
 .task-modal-content {
     background-color: #fafcff;
-    margin: 25px auto;
+    margin: 50vh auto;
+    transform: translateY(-50%);
     padding: 20px;
     border: 1px solid #e4e4e4;
     width: 40%;
     border-radius: 5px;
-    height: 90vh;
+    height: max-content;
 }
 
 .task-modal-content h4 {
@@ -646,12 +647,13 @@ header .container .right .blueButton::after {
 
 .editModal-content {
     background-color: #fafcff;
-    margin: 25px auto;
+    margin: 50vh auto;
+    transform: translateY(-50%);
     padding: 20px;
     border: 1px solid #e4e4e4;
     width: 40%;
     border-radius: 5px;
-    height: 90vh;
+    height: max-content;
 }
 
 .editModal-content h4 {

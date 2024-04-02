@@ -10,7 +10,7 @@
             </a>
         </h1>
         <div class="right">
-            <button class="blueButton" id="create">Create project</button>
+            <button class="blueButton" id="createButton">Create project</button>
             <div class="userDetails">
                 <div class="userImage">
                     <img
@@ -30,7 +30,8 @@
     </div>
 </header>
 <div id="createProjectModal" class="modal">
-    <div class="modal-content">
+    <form class="modal-content" action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
         <h4>Create Project</h4>
         <div class="field">
             <label for="projectName">Project name</label>
@@ -105,10 +106,10 @@
         </div>
 
         <div class="createButtons">
-            <button class="close" id="cancel">cancel</button>
+            <button class="close" id="createCancel" type="button">cancel</button>
             <button class="create" id="save">Create</button>
         </div>
-    </div>
+    </form>
 </div>
 
 
@@ -174,7 +175,7 @@
         </div>
 
         <div class="createButtons">
-            <button class="close" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <button class="close" id="cancelEdit" type="button">Cancel</button>
             <button class="create" id="save" type="submit">Create</button>
         </div>
     </form>
@@ -196,7 +197,7 @@
     <nav>
         <ul>
             <li class="nav-item">
-                <a href="dashboard"
+                <a href="{% url 'dashboard' %}"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-dashboard-icon.svg' %}"
@@ -207,7 +208,7 @@
                 >
             </li>
             <li class="nav-item">
-                <a href="projects"
+                <a href="/project-manager/projects?status=all"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-project-icon.svg' %}"
@@ -359,14 +360,27 @@
         window.location.href = "/";
     };
     
+    const create = document.getElementById("createButton")
+    const createProjectModal = document.getElementById("createProjectModal");
+    const createCancel = document.getElementById("createCancel")
+    const cancelEdit = document.getElementById("cancelEdit")
     const editProject = document.getElementById("editProjectModal");
     const editProjectButton = document.getElementById("editProject");
     const cancelProject = document.getElementById("projectCancel");
     const saveProject = document.getElementById("projectSave");
 
+    create.onclick = () => {
+        createProjectModal.style.display = "block";
+    }
+    createCancel.onclick = () => {
+        createProjectModal.style.display = "none";
+    }
     editProjectButton.onclick = () => {
-    editProject.style.display = "block";
+        editProject.style.display = "block";
     };
+    cancelEdit.onclick = () => {
+        editProject.style.display = "none";
+    }
     cancelProject.onclick = () => {
         editProject.style.display = "none";
     };

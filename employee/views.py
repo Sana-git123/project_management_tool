@@ -47,6 +47,7 @@ def employeeProject(request):
 
     return render(request,'employeeProject.html',context)
 
+
 def employeeSingleProject(request,project_id):
     current_user = request.user
     try:
@@ -59,6 +60,7 @@ def employeeSingleProject(request,project_id):
         'singleEmployeeProject' : singleEmployeeProject
     }
     return render(request,'employeeSingleProject.html',context)
+
 
 def updateProject(request, id):
     current_user = request.user

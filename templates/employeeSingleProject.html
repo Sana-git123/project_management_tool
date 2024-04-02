@@ -95,7 +95,7 @@
         <h4>Logout</h4>
         <p>Are you sure want to logout ?</p>
         <div class="createButtons">
-            <button class="close" id="logoutcancel">cancel</button>
+            <button class="close" id="logoutcancel" type="button" >cancel</button>
             <button class="create" id="logoutsave">Logout</button>
         </div>
     </form>
@@ -105,7 +105,7 @@
     <nav>
         <ul>
             <li class="nav-item">
-                <a href="dashboard"
+                <a href="{% url 'employeeDashboard' %}"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-dashboard-icon.svg' %}"
@@ -116,7 +116,7 @@
                 >
             </li>
             <li class="nav-item">
-                <a href="projects"
+                <a href="/employee/projects?status=all"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-project-icon.svg' %}"
@@ -143,10 +143,10 @@
         <section id="employeeSingleProject">
             <h4>{{ singleEmployeeProject.project.name}}</h4>
             <ul>
-                <li><a href="/employee/project">Projects</a></li>
+                <li><a href="/employee/projects?status=all">Projects</a></li>
                 <li>&nbsp;/&nbsp;</li>
                 <li>
-                    <a href="/employee/project/update">Project single</a>
+                    <a href="#">Project single</a>
                 </li>
             </ul>
             <div class="center">

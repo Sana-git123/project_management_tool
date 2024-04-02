@@ -180,6 +180,7 @@ def task(request):
 
     project = Project.objects.get(id=project_id)
     assigned_to = Employee.objects.get(id=assigned_to_id)
+    
 
     new_employee_project = EmployeeProject.objects.create(
         project = project,
