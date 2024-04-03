@@ -15,10 +15,11 @@
             </button>
             <div class="userDetails">
                 <div class="userImage">
-                    <img
-                        src="{% static '../static/images/user-image.png' %}"
-                        alt="User Image"
-                    />
+                    {% if current_user.projectmanager.profile_image %}
+                        <img src="{{ current_user.projectmanager.profile_image.url }}" alt="User Image">
+                    {% else %}
+                        <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
+                    {% endif %}
                 </div>
                 <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
@@ -224,8 +225,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     </form>
 </div>
 
-
-
 <div id="container">
     <nav>
         <ul>
@@ -293,7 +292,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             </div>
             <div class="right">
                 <p class="miniTitle">Completed projects</p>
-                <p class="count">{{ completed_projects_count }}</p>
+                <p class="count" id="completedProjectsCount">{{ completed_projects_count }}</p>
             </div>
         </div>
         <div class="card">
@@ -307,7 +306,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             </div>
             <div class="right">
                 <p class="miniTitle">Project in progress</p>
-                <p class="count">{{ ongoing_projects_count }}</p>
+                <p class="count" id="ongoingProjectsCount">{{ ongoing_projects_count }}</p>
             </div>
         </div>
         <div class="card">
@@ -321,7 +320,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             </div>
             <div class="right">
                 <p class="miniTitle">Projects overdue</p>
-                <p class="count">{{ overdue_projects_count }}</p>
+                <p class="count" id="overdueProjectsCount" >{{ overdue_projects_count }}</p>
             </div>
         </div>
     </div>
@@ -472,11 +471,57 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         modal.style.display = "none";
     };
 
-    
-
-
 </script>
 <script src="{% static '../static/js/projectManager.js' %}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../static/js/chart.js"></script>
+<script>
+
+    // var ongoingCount = {{ ongoing_projects_count }};
+    // var overdueCount = {{ overdue_projects_count }};
+    // var completedCount = {{ completed_projects_count }};
+
+    var completedProjectsCount = document.getElementById("completedProjectsCount").textContent
+    var ongoingProjectsCount = document.getElementById("ongoingProjectsCount").textContent
+    var overdueProjectsCount = document.getElementById("overdueProjectsCount").textContent
+
+    const ctx = document.getElementById("myChart");
+    
+    Chart.defaults.font.size = 20;
+    Chart.defaults.color = '#4B4F5E';
+    new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: [
+                "Completed projects",
+                "Overdue projects",
+                "Project in progress",
+            ],
+            datasets: [
+                {
+                    label: "Count",
+                    data: [completedProjectsCount, overdueProjectsCount, ongoingProjectsCount],
+                    backgroundColor: ["#7FCC87", "#E27171", "#90A5EF"],
+                    hoverOffset: 4,
+                    borderRadius:8,
+                    borderWidth: 5,
+                },
+            ],
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        family: 'InterRegular',
+                    }
+                },
+            },
+            layout: {
+                padding: 0
+            }
+        },
+    });
+</script>
+
 {% endblock %}

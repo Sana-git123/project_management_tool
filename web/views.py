@@ -12,7 +12,6 @@ def index(request):
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
-
             if Employee.objects.filter(user=user).exists():
                 role = 'employee'
                 login(request, user)

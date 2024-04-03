@@ -137,7 +137,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .updateModal .update-content {
@@ -312,7 +313,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .task-modal-content {
@@ -442,7 +444,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .infoModal .infomodal-content {
@@ -453,7 +456,7 @@ header .container .right .blueButton::after {
     border: 1px solid #e4e4e4;
     width: 30%;
     border-radius: 6px;
-    height: 45vh;
+    height: max-content;
     position: relative;
 }
 .infoModal .closeIcon {
@@ -485,7 +488,7 @@ header .container .right .blueButton::after {
 .infoModal .infomodal-content .field {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 5px;
     margin-bottom: 15px;
 }
 
@@ -496,7 +499,7 @@ header .container .right .blueButton::after {
     padding: 8px 0;
     font-family: "InterMedium";
     color: #4a4c51;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .infoModal .infomodal-content .field label {
@@ -520,7 +523,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .modal-content {
@@ -587,7 +591,16 @@ header .container .right .blueButton::after {
     padding: 10px;
     border-radius: 4px;
 }
-
+.modal-content .field textarea {
+    border: 1px solid #d5d7e2;
+    padding: 10px;
+    border-radius: 4px;
+    resize: none;
+    font-family: 'InterRegular';
+}
+.modal-content .field textarea::placeholder {
+    font-family: 'InterRegular';
+}
 .modal-content .twoFields {
     display: flex;
     justify-content: space-between;
@@ -642,7 +655,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .editModal-content {
@@ -766,7 +780,8 @@ header .container .right .blueButton::after {
     width: 100%;
     height: 100%;
     /* overflow: auto; */
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
 }
 
 .logoutModal-content {
@@ -952,6 +967,14 @@ header .container .right .blueButton::after {
     background-size: cover;
     background-position: bottom;
     background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#dashboard .middle .teamPerformance .graph canvas {
+    width: 500px !important;
+    height: 80%  !important;
 }
 
 #dashboard .middle .deadlineProjects {
@@ -1697,9 +1720,9 @@ header .container .right .blueButton::after {
     color: white; /* White text */
 }
 
-
-
-
+#myChart {
+    width: 500px;
+}
 
 
 

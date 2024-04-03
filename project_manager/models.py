@@ -30,6 +30,7 @@ class Project(models.Model):
     client_contact_number = models.CharField(max_length=20,null=True,blank=True)
     project_manager = models.ForeignKey('project_manager.ProjectManager',on_delete=models.CASCADE,null=True)
 
+
     class Meta:
         db_table = 'project_manager_project'
         verbose_name = _('Project')
@@ -47,7 +48,8 @@ class ProjectManager(models.Model):
     mobile_number = models.CharField(max_length=156)
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     project_manager_project = models.ManyToManyField(Project,null=True,blank=True)
-    
+    pofile_image=models.ImageField(upload_to='profile_images/',null=True,blank=True)
+
     class Meta:
         db_table = 'project_manager_project_manger'
         verbose_name = _('project manager')
