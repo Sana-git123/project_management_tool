@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
-from project_manager.models import Project,ProjectManager
+from django.urls import reverse
+from project_manager.models import Project,ProjectManager,Meeting
 from employee.models import EmployeeProject,Employee
 from django.http import HttpResponse,JsonResponse
 from datetime import date,datetime
@@ -17,12 +18,14 @@ def dashboard(request):
     current_user = request.user
     employee_model = Employee.objects.all()
     all_projects_count = Project.objects.filter(project_manager__user=current_user).count()
-    completed_projects_count = Project.objects.filter(project_manager__user=current_user, project_status="completed").count()
-    ongoing_projects_count = Project.objects.filter(project_manager__user=current_user, project_status="on_progress").count()
-    overdue_projects_count = Project.objects.filter(project_manager__user=current_user, project_status="over_due").count()
+    completed_projects_count = EmployeeProject.objects.filter(project__project_manager__user=current_user, project_status="completed").count()
+    ongoing_projects_count = EmployeeProject.objects.filter(project__project_manager__user=current_user, project_status="on_progress").count()
+    # ongoing_projects_count = Project.objects.filter(project_manager__user=current_user, project_status="on_progress").count()
+    # overdue_projects_count = Project.objects.filter(project_manager__user=current_user, project_status="over_due").count()
+    overdue_projects_count = EmployeeProject.objects.filter(project__project_manager__user=current_user, project_status="over_due").count()
 
     today_deadline_projects = Project.objects.filter(project_manager__user=current_user, submission_date__date=datetime.today())
-    today_assigned_projects = EmployeeProject.objects.filter(assign_date__date=date.today())
+    today_assigned_projects = EmployeeProject.objects.filter(project__project_manager__user=current_user,date_added__date=date.today())
     overdue_projects = Project.objects.filter(project_manager__user=current_user,submission_date__date__lt=datetime.today())
 
     context = {
@@ -43,9 +46,11 @@ def dashboard(request):
 
 def project(request):
     current_user = request.user
-    project_status = request.GET.get('status')
-    projects = Project.objects.all()
+    project_status = request.GET.get('status',"all")
+    projects = Project.objects.filter(project_manager__user=current_user)
     employees = Employee.objects.all()
+
+    all_projects = None
 
     if project_status == 'all':
         all_projects = EmployeeProject.objects.filter(project__project_manager__user=current_user)
@@ -64,6 +69,62 @@ def project(request):
     }
 
     return render(request,'project.html',context)
+
+
+def main_project(request):
+    current_user = request.user
+    all_projects = None
+    employees = Employee.objects.all()
+    
+    if Project.objects.filter(project_manager__user=current_user).exists():
+        all_projects = Project.objects.filter(project_manager__user=current_user)
+
+    context = {
+        'current_user': current_user,
+        'employees' : employees,
+        'all_projects': all_projects,
+    }
+
+    return render(request,'mainProject.html',context)
+
+
+def meetings(request):
+    current_user = request.user
+    employees = Employee.objects.all()
+    
+    all_meetings = Meeting.objects.filter(created_by__user=current_user)
+
+    context = {
+        'current_user': current_user,
+        'employees' : employees,
+        'all_meetings' : all_meetings
+    }
+
+    return render(request,'meeting.html',context)
+
+
+def create_meeting(request):
+
+    current_user = request.user
+    employee_id = request.POST.get('employee_id')
+    meet_date = request.POST.get('meet_date')
+    link = request.POST.get('link')
+
+    employee = Employee.objects.get(id=employee_id)
+    created_by = ProjectManager.objects.get(user=current_user)
+        
+    new_meeting = Meeting.objects.create(
+                employee = employee,
+                meet_date = meet_date,
+                link = link,
+                created_by = created_by
+            )
+
+    context = {
+        'current_user' : current_user
+    }
+    return redirect('meetings')
+
 
 def single(request,project_id):
     current_user = request.user
@@ -97,13 +158,13 @@ def single(request,project_id):
 def employee_project_info(request,employee_project_id):
 
     if EmployeeProject.objects.filter(pk=employee_project_id).exists():
-        project = EmployeeProject.objects.filter(pk=employee_project_id).first()
+        project = EmployeeProject.objects.get(pk=employee_project_id)
         
         data = {
             "description":project.description,
-            "updated_by":project.project.project_manager.name,
-            "current_status":project.project_status,
-            "updated_on":project.date_added,
+            "updated_by":project.updated_by.username,
+            "current_status":project.get_project_status_display(),
+            "updated_on":project.updated_on,
         }
 
         print(data)
@@ -171,16 +232,19 @@ def create(request):
     return redirect('dashboard') 
 
 def task(request):
+    current_user = request.user
     project_id = request.POST.get('project_name')
     description = request.POST.get('description')
     task_priority = request.POST.get('task_priority')
     assign_date = request.POST.get('assign_date')
-    due_date = request.POST.get('assign_date')
+    due_date = request.POST.get('due_date')
     assigned_to_id = request.POST.get('assigned_to')
+    file_field = request.FILES.get('file_field')
 
     project = Project.objects.get(id=project_id)
     assigned_to = Employee.objects.get(id=assigned_to_id)
     
+    date_added = datetime.now() 
 
     new_employee_project = EmployeeProject.objects.create(
         project = project,
@@ -188,10 +252,13 @@ def task(request):
         priority = task_priority,
         assign_date = assign_date,
         due_date = due_date,
-        employee = assigned_to
+        employee = assigned_to,
+        date_added = date_added,
+        file_field = file_field,
+        updated_by = current_user,
     )
 
-    return redirect('dashboard')
+    return redirect(reverse('project'))
 
 def cancelCreate(request):
     return redirect('dashboard')

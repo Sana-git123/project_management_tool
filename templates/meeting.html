@@ -50,12 +50,6 @@
         </div>
         <div class="field">
             <label for="projectName">Description</label>
-            <!-- <input
-                type="text"
-                class="textInput"
-                placeholder="Type something about project..."
-                name="description"
-            /> -->
             <textarea
                 class="textInput"
                 name="description"
@@ -136,7 +130,7 @@
     </form>
 </div>
 <div id="taskProjectModal" class="taskModal">
-    <form class="task-modal-content" action="{% url 'task' %}" method="POST" enctype="multipart/form-data">
+    <form class="task-modal-content" action="{% url 'task' %}" method="POST">
         {% csrf_token %}
         <h4>Create Task</h4>
         <div class="field">
@@ -187,19 +181,11 @@
             </div>
         </div>
         <div class="field">
-            <label for="projectName">Upload file</label>
-            <input
-                type="file"
-                placeholder="YYYY-MM-DD HH:MM"
-                name="file_field"
-            />
-        </div>
-        <div class="field">
             <label for="projectName">Assigned to</label>
             <span class="dropDownList">
                 <select id="assigneto" name="assigned_to">
                     {% for employee in employees %}
-                    <option value="{{ employee.id }}">{{ employee }} [{{employee.designation}}]</option>
+                    <option value="{{ employee.id }}">{{ employee }}</option>
                     {% endfor %}
                 </select>
             </span>
@@ -297,6 +283,33 @@
         </div>
     </div>
 </div>
+<div id="createMeeting" class="createMeeting">
+    <form class="createMeeting-content" action="{% url 'create_meeting' %}" method="POST">
+        {% csrf_token %}
+        <h4>Schedule Meeting</h4>
+        <div class="pairField amountPairField">
+            <label for="name" >Name</label>
+            <select id="assigneto" name="employee_id" class="dropDownList" required>
+                <option value="">Select employee</option>
+                {% for employee in employees %}
+                <option value="{{ employee.id }}">{{ employee.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="pairField amountPairField">
+            <label for="name" >Date</label>
+            <input type="text" placeholder="YYYY-MM-DD HH:MM" name="meet_date" required>
+        </div>
+        <div class="pairField amountPairField">
+            <label for="name" >Link</label>
+            <input type="text" placeholder="Link" name="link" required>
+        </div>
+        <div class="taskButtons">
+            <button class="reject" id="meetingCancel" type="button">cancel</button>
+            <button class="select" id="meetingSave">Schedule</button>
+        </div>
+    </form>
+</div>
 
 <div id="logoutModal" class="logoutModal">
     <form
@@ -320,14 +333,15 @@
     <nav>
         <ul>
             <li class="nav-item">
-                <a href="dashboard"
+                <a href="/project-manager/dashboard"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-dashboard-icon.svg' %}"
                             alt="Dashboard Icon"
                         />
                     </div>
-                    Dashboard</a>
+                    Dashboard</a
+                >
             </li>
             <li class="nav-item">
                 <a href="{% url 'main_project' %}"
@@ -340,11 +354,11 @@
                     Projects</a
                 >
             </li>
-            <li class="nav-item active">
-                <a href="projects?status=all"
+            <li class="nav-item">
+                <a href="/project-manager/projects?status=all"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/white-project-icon.svg' %}"
+                            src="{% static 'images/dark-project-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
@@ -352,11 +366,12 @@
                 >
             </li>
             
-            <li class="nav-item">
+            </li>
+            <li class="nav-item active">
                 <a href="{% url 'meetings' %}"
                     ><div class="icon">
                         <img
-                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            src="{% static '/images/white-meeting-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
@@ -379,77 +394,36 @@
     <div class="content">
         <section id="project">
             <span class="head">
-                <h4>Tasks</h4>
-                <button class="taskButton" id="newTask">Create Task</button>
+                <h4>Meetings</h4>
+                <button class="taskButton" id="createMeetingButton" style="margin-bottom: 10px;">Create meeting</button>
             </span>
-            <ul>
-                <li class="status active" data-slug="all">
-                    <a href="/project-manager/projects?status=all"
-                        >All tasks</a
-                    >
-                </li>
-                <li class="status" data-slug="completed">
-                    <a href="?status=completed">Completed tasks</a>
-                </li>
-                <li class="status" data-slug="in-progress">
-                    <a href="?status=in-progress">Tasks in progress</a>
-                </li>
-                <li class="status" data-slug="overdue">
-                    <a href="?status=overdue">Tasks overdue </a>
-                </li>
-            </ul>
-            {% if all_projects.count == 0 %}
+            {% if all_meetings.count == 0 %}
             <div class="noTaskContainer">
-                <div class="noTask">
-                    <img src="{% static 'images/empty-project.png' %}" alt="No task image">
-                </div>
+                <p>No meetings found</p>
             </div>
             {% else %}
             <div class="projectTable">
-                <table class="tableStyle projectTableStyle" id="userTable">
+                <table class="tableStyle projectTableStyle" id="meetingTable" >
                     <thead>
                         <th>SI NO</th>
-                        <th>Project name</th>
-                        <th class="centre">Employee name</th>
-                        <th class="centre">Assigned date</th>
-                        <th class="centre">Submission date</th>
-                        <th class="right">Current status</th>
-                        <th class="right">Priority</th>
+                        <th>Employee name</th>
+                        <th class="centre">Time</th>
+                        <th class="right">Link</th>
                     </thead>
                     <tbody>
-                        {% for project in all_projects %}
-                        <tr id="{{ project.id }}">
+                        {% for meeting in all_meetings %}
+                        <tr id="{{ meeting.id }}" class="preventClick">
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ project.project.name }}</td>
-                            <td class="centre">{{ project.employee.name }}</td>
-                            <td class="centre">{{ project.assign_date }}</td>
-                            <td class="centre">{{ project.due_date }}</td>
-                            <td
-                                class="right info"
-                                data-projectID="{{ project.id }}"
-                                name="info-button"
-                            >
-                                info
-                                <div class="infoFrame">
-                                    <img
-                                        src="../static/images/info-icon.svg"
-                                        alt="info button"
-                                    />
-                                </div>
-                            </td>
-                            <td
-                                class="right priorityChoice"
-                                id="priorityColor"
-                                data-priority="{{ project.priority }}"
-                            >
-                                {{ project.get_priority_display }}
-                            </td>
+                            <td>{{ meeting.employee.name }}</td>
+                            <td class="centre">{{ meeting.meet_date|date:"d/m/Y h:i A" }}</td>
+                            <td class="right"><a href="{{ meeting.link }}">{{ meeting.link }}</a></td>
+                            
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 <div class="paginationContainer">
-                    <div class="text">Showing 1 to 10 Task's</div>
+                    <div class="text">Showing 1 to 10 Meeting's</div>
                     <div class="paginationNav">
                         <button id="prevBtn">&lt;</button>
                         <!-- Previous button -->
@@ -499,20 +473,6 @@
 
     const params = new URLSearchParams(location.search);
 
-    listStatus.forEach((item) => {
-        const status = item.getAttribute("data-slug");
-
-        if (status == params.get("status")) {
-            item.classList.add("active");
-        } else {
-            item.classList.remove("active");
-        }
-    });
-
-    closeInfo.onclick = function () {
-        infoModal.style.display = "none";
-    };
-
     cancelCreate.onclick = () => {
         createProjectModal.style.display = "none";
     };
@@ -542,22 +502,6 @@
         }
     });
 
-    // switch (priorityColorValue) {
-    //     case "normal":
-    //         priorityColor.classList.add("blueColor");
-    //         break;
-    //     case "high":
-    //         priorityColor.classList.add("yellowColor");
-    //         break;
-    //     case "low":
-    //     case "urgent":
-    //         priorityColor.classList.add("redColor");
-    //         break;
-    //     default:
-    //         // Handle unexpected values or do nothing
-    //         break;
-    // }
-
     function formatDate(date) {
         const day = String(date.getDate()).padStart(2, "0");
         const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based
@@ -566,41 +510,88 @@
         return `${day}-${month}-${year}`;
     }
 
-    const fetchProjectInfo = async (projectId = "") => {
-        try {
-            const res = await fetch(
-                `/project-manager/projects/info/${projectId}`
-            );
-            const data = await res.json();
+</script>
+<script> 
+    const button = document.getElementById("create");
+    const modal = document.getElementById("createProjectModal");
+    const createButton = document.getElementById("save");
+    const taskModal = document.getElementById("taskProjectModal")
 
-            if (data) {
-                const updated_by = document.getElementById("updated_by");
-                const updated_on = document.getElementById("updated_on");
-                const project_status =
-                    document.getElementById("project_status");
-                const description = document.getElementById("description");
-
-                updated_by.innerText = data.updated_by;
-                updated_on.innerText = formatDate(new Date(data.updated_on));
-                project_status.innerText = data.current_status;
-                description.innerText = data.description;
-            }
-        } catch (error) {
-            console.log(error);
-        }
+    createButton.onclick = function () {
+        modal.style.display = "none";
+    };
+    button.onclick = function () {
+        modal.style.display = "block";
     };
 
-    infoButtons.forEach((button) => {
-        button.addEventListener("click", function (event) {
-            event.stopPropagation();
-            const projectID = button.getAttribute("data-projectID");
+    const createMeetingButton = document.getElementById("createMeetingButton")
+    const createMeetingModal = document.getElementById("createMeeting")
+    const meetingCancel = document.getElementById("meetingCancel")
 
-            fetchProjectInfo(projectID);
-
-            infoModal.style.display = "block";
-        });
-    });
+    createMeetingButton.onclick = () => {
+        createMeetingModal.style.display = "block"
+    }
+    meetingCancel.onclick = () => {
+        createMeetingModal.style.display = "none"
+    }
 </script>
-<script src="{% static '../static/js/projectManager.js' %}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    var table = document.getElementById('meetingTable');
+    var rows = table.getElementsByTagName('tr');
+    var rowsPerPage = 11;
+    var currentPage = 0;
+    function showPage(page) {
+        var start = page * rowsPerPage;
+        var end = start + rowsPerPage;
+        for (var i = 0; i < rows.length; i++) {
+            if (i >= start && i < end) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
+            }
+        }
+    }
+    function createPagination() {
+        var pageCount = Math.ceil(rows.length / rowsPerPage);
+        var pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+        for (var i = 0; i < pageCount; i++) {
+            var button = document.createElement('button');
+            button.innerText = i + 1;
+            button.addEventListener('click', function() {
+                currentPage = parseInt(this.innerText) - 1;
+                showPage(currentPage);
+            });
+            pagination.appendChild(button);
+        }
+    }
+    function updatePagination() {
+        var buttons = document.querySelectorAll('.pagination button');
+        buttons.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        buttons[currentPage].classList.add('active');
+    }
+    createPagination();
+    showPage(currentPage);
+    var prevBtn = document.getElementById('prevBtn');
+    var nextBtn = document.getElementById('nextBtn');
+    prevBtn.addEventListener('click', function() {
+        if (currentPage > 0) {
+            currentPage--;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+    nextBtn.addEventListener('click', function() {
+        if (currentPage < Math.ceil(rows.length / rowsPerPage) - 1) {
+            currentPage++;
+            showPage(currentPage);
+            updatePagination();
+        }
+    });
+});
 
+</script>
 {% endblock %}

@@ -26,7 +26,7 @@ body {
     font-family: "InterRegular";
     color: #1a1919;
     background-color: #ffffff;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 a {
     color: #000000;
@@ -37,7 +37,7 @@ a {
 }
 
 .wrapper {
-    max-width: 1500px;
+    max-width: 100%;
     margin: 0 auto;
     width: 98%;
 }
@@ -840,7 +840,7 @@ header .container .right .blueButton::after {
 #container nav {
     background-color: #ebeffb;
     width: 15%;
-    height: 90vh;
+    height: 92vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1065,13 +1065,35 @@ header .container .right .blueButton::after {
 
 .tableStyle tbody tr td {
     color: #4b4f5e;
-    padding: 12px 0 12px 15px;
+    padding: 16px 0 12px 15px;
     font-size: 14px;
     font-family: "InterMedium";
 }
 #project .head {
     display: flex;
     justify-content: space-between;
+}
+#project .noTaskContainer {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 60vh;
+}
+#project .noTaskContainer .noTask {
+    width: 200px;
+}
+
+.noTaskContainer {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 60vh;
+}
+
+.noTaskContainer .noTask {
+    width: 200px;
 }
 
 #project .head .taskButton {
@@ -1149,6 +1171,23 @@ header .container .right .blueButton::after {
 #project .projectTable .projectTableStyle tbody tr .right {
     text-align: end;
     padding-right: 20px;
+}
+#project .projectTable .projectTableStyle tbody tr .yellowColor {
+    color: #E7D15A;
+    font-family: 'InterMedium';
+}
+
+#project .projectTable .projectTableStyle tbody tr .redColor {
+    color: #D44F4F;
+    font-family: 'InterMedium';
+}
+#project .projectTable .projectTableStyle tbody tr .blueColor {
+    color: #4B4F5E;
+    font-family: 'InterMedium';
+}
+#project .projectTable .projectTableStyle tbody tr .darkBlueColor {
+    color: #3A4F9E;
+    font-family: 'InterMedium';
 }
 
 #project .projectTable .projectTableStyle tbody tr .info {
@@ -1402,16 +1441,16 @@ header .container .right .blueButton::after {
     border-radius: 16px;
 }
 
-#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .high {
+#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .yellowColor {
     color: #E7D15A;    
 }
-#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .normal {
+#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .darkBlueColor {
     color: #3A4F9E;    
 }
-#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .urgent {
+#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .redColor {
     color: #D44F4F;    
 }
-#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .low {
+#employeeDashboard .todayAssigned .todayAssignedTableStyle tbody tr .blueColor {
     color: #4B4F5E;    
 }
 
@@ -1495,6 +1534,23 @@ header .container .right .blueButton::after {
     cursor: pointer;
 }
 
+#employeeProject .projects .projectTableStyle tbody tr .yellowColor {
+    color: #E7D15A;
+    font-family: 'InterMedium';
+}
+
+#employeeProject .projects .projectTableStyle tbody tr .redColor {
+    color: #D44F4F;
+    font-family: 'InterMedium';
+}
+#employeeProject .projects .projectTableStyle tbody tr .darkBlueColor {
+    color: #3A4F9E;
+    font-family: 'InterMedium';
+}
+#employeeProject .projects .projectTableStyle tbody tr .blueColor {
+    color: #4B4F5E;
+    font-family: 'InterMedium';
+}
 
 
 #employeeSingleProject {
@@ -1725,6 +1781,108 @@ header .container .right .blueButton::after {
 }
 
 
+.createMeeting {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* overflow: auto; */
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
+.createMeeting-content {
+    background-color: #fafcff;
+    margin: 50vh auto;
+    transform: translateY(-50%);
+    padding: 30px;
+    border: 1px solid #e4e4e4;
+    width: 40%;
+    border-radius: 18px;
+    height: max-content;
+    max-height: 800px;
+    /* overflow-y: scroll; */
+    position: relative;
+}
+
+.createMeeting .closeIcon {
+    position: absolute;
+    width: 33px;
+    background-color: #FBFCFF;
+    padding: 5px;
+    right: -8%; 
+    top: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 1px solid #D5D7E2;
+}
+
+.createMeeting-content h4 {
+    font-size: 18px;
+    font-family: "InterMedium";
+    color: #33447C;
+    margin-bottom: 20px;
+}
+
+.createMeeting-content .pairField {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.createMeeting-content .pairField .pdf .downloadIcon {
+    width: 20px;
+}
+
+.createMeeting-content .pairField label {
+    color: #9B9AA5;
+    font-size: 15px;
+    width: 150px;
+}
+.createMeeting-content .pairField p {
+    font-size: 14px;
+    flex: 1;
+    color: #64636D;
+    line-height: 25px;
+}
+.createMeeting-content .pairField input {
+    border: 1px solid #ECE0FF;
+    width: 100%;
+    padding: 5px 10px;
+}
+.createMeeting-content .pairField .dropDownList {
+    border: 1px solid #ECE0FF;
+    width: 100%;
+    padding: 5px 10px;
+}
+
+.createMeeting-content .taskButtons {
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    margin-top: 40px;
+}
+
+.createMeeting-content .taskButtons .reject {
+    color: #221C62;
+    font-size: 14px;
+    width: 150px;
+    padding: 10px 0;
+    border: 1px solid #221C62;
+    border-radius: 4px;
+}
+
+.createMeeting-content .taskButtons .select {
+    color: #ffffff;
+    font-size: 14px;
+    background-color: #221C62;
+    width: 150px;
+    padding: 10px 0;
+    font-family: "InterRegular";
+    border-radius: 4px;
+}
 
 

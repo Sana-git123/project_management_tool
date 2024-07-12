@@ -35,7 +35,7 @@ class Project(models.Model):
         db_table = 'project_manager_project'
         verbose_name = _('Project')
         verbose_name_plural = _('Projects')
-        ordering = ('name',)
+        ordering = ('submission_date',)
 
     def __str__(self):
         return self.name
@@ -48,7 +48,7 @@ class ProjectManager(models.Model):
     mobile_number = models.CharField(max_length=156)
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     project_manager_project = models.ManyToManyField(Project,null=True,blank=True)
-    pofile_image=models.ImageField(upload_to='profile_images/',null=True,blank=True)
+    profile_image=models.ImageField(upload_to='profile_images/',null=True,blank=True)
 
     class Meta:
         db_table = 'project_manager_project_manger'
@@ -58,4 +58,23 @@ class ProjectManager(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Meeting(models.Model):
+    employee = models.ForeignKey('employee.employee',on_delete=models.CASCADE,null=True,blank=True,related_name='profile_meetings')
+    meet_date = models.DateTimeField(null=True,blank=True)
+    link = models.CharField(max_length=700,null=True,blank=True)
+    is_deleted = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('project_manager.projectmanager',on_delete=models.CASCADE,null=True,blank=True,related_name='created_meetings')
+
+    class Meta:
+        db_table = 'project_manager_meeting'
+        verbose_name = _('Meeting')
+        verbose_name_plural = _('Meetings')
+        ordering = ('-meet_date',)
+
+    def __str__(self):
+        return str(self.employee)
+    
     

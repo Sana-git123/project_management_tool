@@ -113,7 +113,7 @@
     <nav>
         <ul>
             <li class="nav-item">
-                <a href="dashboard"
+                <a href="/employee/dashboard"
                     ><div class="icon">
                         <img
                             src="{% static 'images/dark-dashboard-icon.svg' %}"
@@ -123,22 +123,22 @@
                     Dashboard</a
                 >
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a href="/employee/projects?status=all"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/white-project-icon.svg' %}"
+                            src="{% static 'images/dark-project-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
                     Tasks</a
                 >
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a href="{% url 'employee_meeting' %}"
                     ><div class="icon">
                         <img
-                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            src="{% static '/images/white-meeting-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
@@ -160,58 +160,29 @@
     </nav>
     <div class="content">
 <section id="employeeProject">
-    <h4>Tasks</h4>
-    <ul>
-        <li class="status" data-slug="all"><a href="/employee/projects?status=all">All tasks</a></li>
-        <li class="status" data-slug="completed"><a href="?status=completed">Completed tasks</a></li>
-        <li class="status" data-slug="in-progress"><a href="?status=in-progress">Tasks in progress</a></li>
-        <li class="status"data-slug="overdue"><a href="?status=overdue">Tasks overdue</a></li>
-    </ul>
-    {% if all_projects.count == 0 %}
-    <div class="noTaskContainer">
-        <div class="noTask">
-            <img src="{% static 'images/empty-project.png' %}" alt="No task image">
-        </div>
-    </div>
-    {% else %}
+    <h4>Meetings</h4>
     <div class="projects">
-        <table class="tableStyle projectTableStyle" id="employeeProjectTable">
+        <table class="tableStyle projectTableStyle" id="meetingTable">
             <thead>
                 <th>SI NO</th>
-                <th>Project name</th>
-                <th class="centre">Assigned date</th>
-                <th class="centre">Submission date</th>
-                <th class="centre">Current status</th>
-                <th class="centre">Priority</th>
-                <th class="right">Action</th>
+                <th>Employee name</th>
+                <th class="centre">Time</th>
+                <th class="right">Link</th>
             </thead>
             <tbody>
-                {% for employee_project in all_projects %}
-                <tr id="{{ employee_project.id }}">
+                {% for meeting in meetings %}
+                <tr id="{{ meeting.id }}" class="preventClick">
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ employee_project.project.name }}</td>
-                    <td class="centre">{{ employee_project.assign_date }}</td>
-                    <td class="centre">{{ employee_project.due_date }}</td>
-                    <td class="centre">{{ employee_project.get_project_status_display }}</td>
-                    <td class="centre priorityChoice" data-priority="{{ employee_project.priority }}">{{ employee_project.get_priority_display }}</td>
-                    <td class="right" id="updateButton">
-                        <button
-                            class="projectUpdate" 
-                            data-priority="{{employee_project.priority}}"
-                            data-employee-project-id="{{employee_project.pk}}"
-                            data-description="{{employee_project.description}}"
-                            data-progress="{{employee_project.project_status}}"
-                            data-project-name="{{employee_project.project.name}}"
-                        >
-                        update
-                        </button>
-                    </td>
+                    <td>{{ meeting.employee.name }}</td>
+                    <td class="centre">{{ meeting.meet_date|date:"d/m/Y h:i A" }}</td>
+                    <td class="right"><a href="{{ meeting.link }}">{{ meeting.link }}</a></td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <div class="paginationContainer">
-            <div class="text">Showing 1 to 10 Task's</div>
+            <div class="text">Showing 1 to 10 Meetings</div>
             <div class="paginationNav">
                 <button id="prevBtn">&lt;</button>
                 <div id="pagination" class="pagination"></div>
@@ -219,7 +190,6 @@
             </div>
         </div>
     </div>
-    {% endif %}
 </section>
 </div>
 </div>
@@ -329,14 +299,12 @@
     updateSave.onclick = function () {
         updateModal.style.display = "none";
     };
-
-    
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    var table = document.getElementById('employeeProjectTable');
+    var table = document.getElementById('meetingTable');
     var rows = table.getElementsByTagName('tr');
-    var rowsPerPage = 9;
+    var rowsPerPage = 11;
     var currentPage = 0;
     function showPage(page) {
         var start = page * rowsPerPage;

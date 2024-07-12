@@ -15,17 +15,24 @@
             </button> -->
             <div class="userDetails">
                 <div class="userImage">
+                    {% if current_user.employee.profile_image %}
                     <img
-                        src="{% static '../static/images/user-image.png' %}"
+                        src="{{ current_user.employee.profile_image.url }}"
                         alt="User Image"
                     />
+                    {% else %}
+                    <img
+                        src="{% static 'images/user-image.png' %}"
+                        alt="Default User Image"
+                    />
+                    {% endif %}
                 </div>
                 <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
-                    <img
+                    <!-- <img
                         src="{% static '../static/images/dropdown.svg' %}"
                         alt=""
-                    />
+                    /> -->
                 </div>
             </div>
         </div>
@@ -36,7 +43,11 @@
         <h4>Edit Project</h4>
         <div class="field">
             <label for="projectName">Project name</label>
-            <input type="text" placeholder="Enter project name" value="{{ singleProject.project_name }}"/>
+            <input
+                type="text"
+                placeholder="Enter project name"
+                value="{{ singleProject.project_name }}"
+            />
         </div>
         <div class="field">
             <label for="projectName">Description</label>
@@ -52,9 +63,8 @@
             <span class="dropDownList"
                 ><input
                     type="text"
-                    placeholder="Select project priority" 
-                    value="{{ singleProject.priority }}"
-                    />
+                    placeholder="Select project priority"
+                    value="{{ singleProject.priority }}" />
                 <div class="downarrow">
                     <img
                         src="{% static '../static/images/arrow-down.svg' %}"
@@ -65,12 +75,20 @@
         <div class="twoFields">
             <div class="field">
                 <label for="projectName">Assigning date</label>
-                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.assigned_date }}"/>
+                <input
+                    type="text"
+                    placeholder="DD / MM / YYYY"
+                    value="{{ singleProject.assigned_date }}"
+                />
             </div>
 
             <div class="field">
                 <label for="projectName">Submission date</label>
-                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.submission_date }}"/>
+                <input
+                    type="text"
+                    placeholder="DD / MM / YYYY"
+                    value="{{ singleProject.submission_date }}"
+                />
             </div>
         </div>
         <h6>Team details</h6>
@@ -78,7 +96,10 @@
             <div class="field">
                 <label for="projectName">Project category</label>
                 <span class="dropDownList"
-                    ><input type="text" placeholder="Select team" value="{{ singleProject.team }}"/>
+                    ><input
+                        type="text"
+                        placeholder="Select team"
+                        value="{{ singleProject.team }}" />
                     <div class="downarrow">
                         <img
                             src="{% static '../static/images/arrow-down.svg' %}"
@@ -104,7 +125,10 @@
         <div class="field">
             <label for="projectName">Assigned to</label>
             <span class="dropDownList"
-                ><input type="text" placeholder="Select employee" value="{{ singleProject.employee_name }}" />
+                ><input
+                    type="text"
+                    placeholder="Select employee"
+                    value="{{ singleProject.employee_name }}" />
                 <div class="downarrow">
                     <img
                         src="{% static '../static/images/arrow-down.svg' %}"
@@ -188,11 +212,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             </div>
             <div class="field">
                 <label for="projectName">Priority</label>
-                <input
-                    type="text"
-                    placeholder="Updated by"
-                    value="Urgent"
-                />
+                <input type="text" placeholder="Updated by" value="Urgent" />
             </div>
         </div>
 
@@ -203,10 +223,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 placeholder="Add description..."
                 class="textField"
                 rows="3"
-            ></textarea
-            >
+            ></textarea>
         </div>
-        
+
         <div class="field">
             <label for="projectName">Select priority</label>
             <span class="dropDownList"
@@ -229,26 +248,31 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 </div>
 
 <div id="logoutModal" class="logoutModal">
-    <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
+    <form
+        class="logoutModal-content"
+        action="{% url 'logout_user' %}"
+        method="POST"
+    >
         {% csrf_token %}
         <h4>Logout</h4>
         <p>Are you sure want to logout ?</p>
         <div class="createButtons">
-            <button class="close" id="logoutcancel" type="button">cancel</button>
+            <button class="close" id="logoutcancel" type="button">
+                cancel
+            </button>
             <button class="create" id="logoutsave">Logout</button>
         </div>
     </form>
 </div>
 
-
 <div id="container">
     <nav>
         <ul>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a href="dashboard"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            src="{% static 'images/white-dashboard-icon.svg' %}"
                             alt="Dashboard Icon"
                         />
                     </div>
@@ -263,7 +287,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                             alt="Project Icon"
                         />
                     </div>
-                    Projects</a
+                    Tasks</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'employee_meeting' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Meetings</a
                 >
             </li>
         </ul>
@@ -280,95 +315,121 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </div>
     </nav>
     <div class="content">
-<section id="employeeDashboard">
-    <h4>Dashboard</h4>
-    <div class="dashboardCards">
-        <div class="card">
-            <div class="left">
-                <div class="iconFrame">
-                    <img
-                        src="{% static '/images/dashboard-card-icon.svg' %}"
-                        alt=""
-                    />
+        <section id="employeeDashboard">
+            <h4>Dashboard</h4>
+            <div class="dashboardCards">
+                <div class="card">
+                    <div class="left">
+                        <div class="iconFrame">
+                            <img
+                                src="{% static '/images/dashboard-card-icon.svg' %}"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p class="miniTitle">Total tasks</p>
+                        <p class="count">{{ all_projects_count }}</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left">
+                        <div class="iconFrame">
+                            <img
+                                src="{% static '/images/dashboard-card-icon.svg' %}"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p class="miniTitle">Completed tasks</p>
+                        <p class="count">{{ completed_projects_count }}</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left">
+                        <div class="iconFrame">
+                            <img
+                                src="{% static '/images/dashboard-card-icon.svg' %}"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p class="miniTitle">Task in progress</p>
+                        <p class="count">{{ progress_projects_count }}</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="left">
+                        <div class="iconFrame">
+                            <img
+                                src="{% static '/images/dashboard-card-icon.svg' %}"
+                                alt=""
+                            />
+                        </div>
+                    </div>
+                    <div class="right">
+                        <p class="miniTitle">Tasks overdue</p>
+                        <p class="count">{{ overdue_projects_count }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="right">
-                <p class="miniTitle">Total projects</p>
-                <p class="count">{{ all_projects_count }}</p>
+            <div class="subTitle assigned">
+                <p class="subTitletext">Today assigned tasks</p>
             </div>
-        </div>
-        <div class="card">
-            <div class="left">
-                <div class="iconFrame">
-                    <img
-                        src="{% static '/images/dashboard-card-icon.svg' %}"
-                        alt=""
-                    />
-                </div>
+            <div class="todayAssigned">
+                <table class="tableStyle todayAssignedTableStyle">
+                    <thead>
+                        <th>SI NO</th>
+                        <th>Project name</th>
+                        <th>Task status</th>
+                        <th>Task priority</th>
+                        <th>Due date</th>
+                    </thead>
+                    <tbody>
+                        {% for today_assigned in today_assigned_projects %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ today_assigned.project.name }}</td>
+                            <td>
+                                {{ today_assigned.get_project_status_display }}
+                            </td>
+                            <td
+                                class="high priorityChoice"
+                                data-priority="{{ today_assigned.priority }}"
+                            >
+                                {{ today_assigned.get_priority_display }}
+                            </td>
+                            <td>{{ today_assigned.due_date }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <div class="right">
-                <p class="miniTitle">Completed projects</p>
-                <p class="count">{{ completed_projects_count }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="left">
-                <div class="iconFrame">
-                    <img
-                        src="{% static '/images/dashboard-card-icon.svg' %}"
-                        alt=""
-                    />
-                </div>
-            </div>
-            <div class="right">
-                <p class="miniTitle">Project in progress</p>
-                <p class="count">{{ progress_projects_count }}</p>
-            </div>
-        </div>
-        <div class="card">
-            <div class="left">
-                <div class="iconFrame">
-                    <img
-                        src="{% static '/images/dashboard-card-icon.svg' %}"
-                        alt=""
-                    />
-                </div>
-            </div>
-            <div class="right">
-                <p class="miniTitle">Projects overdue</p>
-                <p class="count">{{ overdue_projects_count }}</p>
-            </div>
-        </div>
+        </section>
     </div>
-    <div class="subTitle assigned">
-        <p class="subTitletext">Today assigned projects</p>
-    </div>
-    <div class="todayAssigned">
-        <table class="tableStyle todayAssignedTableStyle">
-            <thead>
-                <th>SI NO</th>
-                <th>Project name</th>
-                <th>Project status</th>
-                <th>Project priority</th>
-                <th>Due date</th>
-            </thead>
-            <tbody>
-                {% for today_assigned in today_assigned_projects %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ today_assigned.project.name }}</td>
-                    <td>{{ today_assigned.get_project_status_display }}</td>
-                    <td class="high">{{ today_assigned.priority }}</td>
-                    <td>{{ today_assigned.due_date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</section>
-</div>
 </div>
 <script>
+    const priorityColor = document.querySelectorAll(".priorityChoice");
+
+    priorityColor.forEach((item) => {
+        const priorityColorValue = item.getAttribute("data-priority");
+
+        if (priorityColorValue === "high") {
+            item.classList.add("yellowColor");
+        }
+        if (priorityColorValue === "low") {
+            item.classList.add("blueColor");
+        }
+        if (priorityColorValue === "normal") {
+            item.classList.add("darkBlueColor");
+        }
+        if (priorityColorValue === "urgent") {
+            item.classList.add("redColor");
+        }
+    });
+
     const logoutModal = document.getElementById("logoutModal");
     const logoutButton = document.getElementById("logoutButton");
     const logoutSave = document.getElementById("logoutsave");
@@ -376,7 +437,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
     logoutButton.onclick = () => {
         logoutModal.style.display = "block";
-    }
+    };
 
     logoutCancel.onclick = () => {
         logoutModal.style.display = "none";

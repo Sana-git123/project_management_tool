@@ -13,17 +13,18 @@
             <button class="blueButton" id="createButton">Create project</button>
             <div class="userDetails">
                 <div class="userImage">
-                    <img
-                        src="{% static '../static/images/user-image.png' %}"
-                        alt="User Image"
-                    />
+                    {% if current_user.projectmanager.profile_image %}
+                        <img src="{{ current_user.projectmanager.profile_image.url }}" alt="User Image">
+                    {% else %}
+                        <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
+                    {% endif %}
                 </div>
                 <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
-                    <img
+                    <!-- <img
                         src="{% static '../static/images/dropdown.svg' %}"
                         alt=""
-                    />
+                    /> -->
                 </div>
             </div>
         </div>
@@ -43,7 +44,7 @@
                 type="text"
                 class="textInput"
                 placeholder="Type something about project..."
-                value="{{ singleProject.project.description }}"
+                value=""
             />
         </div>
         <div class="field">
@@ -96,7 +97,7 @@
         <div class="field">
             <label for="projectName">Assigned to</label>
             <span class="dropDownList"
-                ><input type="text" placeholder="Select employee" value="{{ singleProject.employee.name }}"/>
+                ><input type="text" placeholder="Select employee" value=""/>
                 <div class="downarrow">
                     <img
                         src="{% static '../static/images/arrow-down.svg' %}"
@@ -112,11 +113,6 @@
     </form>
 </div>
 
-
-
-
-
-
 <div id="editProjectModal" class="editModal">
     <form class="editModal-content" action="{% url 'edit' id=singleProject.id %}" method="POST">
         {% csrf_token %}
@@ -124,6 +120,7 @@
         <div class="field">
             <label for="projectName">Project name</label>
             <select id="assigneto" name="project_name" class="dropDownList" >
+                <option value="">Select project</option>
                 {% for project in projects %}
                     <option value="{{ project.id }}">{{ project.name }}</option>
                 {% endfor %}
@@ -143,6 +140,7 @@
             <span class="dropDownList"
                 >
                 <select id="projectPriority" name="task_priority">
+                    <option value="" >Select priority</option>
                     <option value="urgent" >Urgent</option>
                     <option value="high" >High</option>
                     <option value="normal">Normal</option>
@@ -167,6 +165,7 @@
             <span class="dropDownList"
                 >
                 <select id="assigneto" name="assigned_to">
+                    <option value="">Select employee</option>
                     {% for employee in employees %}
                         <option value="{{ employee.id }}">{{ employee }}</option>
                     {% endfor %}
@@ -208,14 +207,39 @@
                 >
             </li>
             <li class="nav-item">
-                <a href="/project-manager/projects?status=all"
+                <a href="{% url 'main_project' %}"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/dark-project-icon.svg' %}"
+                            src="{% static '/images/dark-main-project-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
-                    Projects</a
+                    Projects
+                    </a
+                >
+            </li>
+            <li class="nav-item active">
+                <a href="/project-manager/projects?status=all"
+                    ><div class="icon">
+                        <img
+                            src="{% static 'images/white-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Tasks
+                    </a
+                >
+            </li>
+            
+            <li class="nav-item">
+                <a href="{% url 'meetings' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Meetings</a
                 >
             </li>
         </ul>
@@ -233,15 +257,15 @@
     </nav>
     <div class="content">
         <section id="single">
-            <h4>Dashboard</h4>
+            <h4>Task</h4>
             <ul>
                 <li>
-                    <a href="/project-manager/projects?status=all">Projects</a>
+                    <a href="/project-manager/projects?status=all">Tasks</a>
                 </li>
                 <li>&nbsp;/&nbsp;</li>
                 <li>
                     <a href="/project-manager/projects/project-single"
-                        >Project single</a
+                        >{{ singleProject.project.name }}</a
                     >
                 </li>
             </ul>
@@ -264,18 +288,18 @@
                             disabled
                         />
                     </div>
-                    <div class="clientInput">
+                    <!-- <div class="clientInput">
                         <label for="name">Phone</label>
                         <input
                             type="text"
                             value="{{ singleProject.project.client_contact_number }}"
                             disabled
                         />
-                    </div>
+                    </div> -->
                 </div>
                 <div class="right">
                     <div class="rightTitle">
-                        <h3 class="projectTitle">Project details</h3>
+                        <h3 class="projectTitle">Task details</h3>
                         <button class="edit" id="editProject">Edit</button>
                     </div>
                     <div class="titlePair">
@@ -292,7 +316,7 @@
                     </div>
                     <div class="titlePair">
                         <p class="titleLabel">Priority</p>
-                        <p class="titleContent">{{ singleProject.get_project_status_display }}</p>
+                        <p class="titleContent">{{ singleProject.get_priority_display }}</p>
                     </div>
                     <div class="fullWidth">
                         <div class="titlePair">
@@ -322,11 +346,45 @@
                             </p>
                         </div>
                     </div>
+                    
+                    <div class="fullWidth">
+                        <div class="titlePair">
+                            <p class="titleLabel">Assets</p>
+                            {% if singleProject.file_field %}
+                            <a href="{{ singleProject.file_field.url }}" class="titleContent" style="display: flex; align-items: center; gap: 5px;">
+                                <div class="downloadIcon" style="display: flex; width: 25px;">
+                                    <img src="{% static '/images/download.svg' %}" alt="download icon">
+                                </div>
+                                Download
+                            </a>
+                            {% else %}
+                            <p>
+                                No assets provided
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="titlePair">
+                            <p class="titleLabel">Completed work</p>
+                            {% if singleProject.employee_file %}
+                            <a href="{{ singleProject.employee_file.url }}" class="titleContent" style="display: flex; align-items: center; gap: 5px;">
+                                <div class="downloadIcon" style="display: flex; width: 25px;">
+                                    <img src="{% static '/images/download.svg' %}" alt="download icon">
+                                </div>
+                                Download
+                            </a>
+                            {% else %}
+                            <p>
+                                No work uploaded
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+
                     <h3 class="projectTitle afterBorder">Team details</h3>
                     <div class="fullWidth">
                         <div class="titlePair">
                             <p class="titleLabel">Team</p>
-                            <p class="titleContent">{{ team }}</p>
+                            <p class="titleContent">{{ singleProject.employee.get_designation_display }}</p>
                         </div>
                         <div class="titlePair">
                             <p class="titleLabel">Team lead</p>

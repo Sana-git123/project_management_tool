@@ -1,5 +1,5 @@
 from django.contrib import admin
-from project_manager.models import Project,ProjectManager
+from project_manager.models import Project,ProjectManager,Meeting
 
 # Register your models here.
 
@@ -10,3 +10,8 @@ class ProjectAdmin(admin.ModelAdmin):
 @admin.register(ProjectManager)
 class ProjectManagerAdmin(admin.ModelAdmin):
     list_display = ('name','userid','password','mobile_number', 'user')
+
+@admin.register(Meeting)
+class MeetingAdmin(admin.ModelAdmin):
+    list_display = ('employee','meet_date','link','is_deleted','created_on')
+    search_fields = ['employee']

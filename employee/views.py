@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from project_manager.models import Project
+from project_manager.models import Project,Meeting
 from employee.models import EmployeeProject
 from datetime import date,datetime
 
@@ -28,7 +28,6 @@ def employeeDashboard(request):
 def employeeProject(request):
     current_user = request.user
     project_status = request.GET.get('status')
-    all_projects = None
 
     print(project_status)
     if project_status == 'all':
@@ -48,10 +47,24 @@ def employeeProject(request):
     return render(request,'employeeProject.html',context)
 
 
+def employee_meeting(request):
+    current_user = request.user
+    
+    meetings = Meeting.objects.filter(employee__user=current_user)
+
+    context = {
+        'current_user' : current_user,
+        'meetings': meetings,
+    }
+
+    return render(request,'employeeMeeting.html',context)
+
+
 def employeeSingleProject(request,project_id):
     current_user = request.user
     try:
         singleEmployeeProject = EmployeeProject.objects.get(pk=project_id)
+        
     except:
         return render(request,'emptyProject.html')
     
@@ -69,25 +82,15 @@ def updateProject(request, id):
 
     description = request.POST.get('description')
     progress = request.POST.get('project_status')
+    employee_file = request.FILES.get('employee_file')
+
     project = EmployeeProject.objects.get(id=id)
     project.description = description
     project.project_status = progress
+    project.employee_file = employee_file
+    project.updated_by = current_user
     project.save()
 
     return redirect(to=redirection_uri)
 
-    # try:
-    #     singleEmployeeProject = EmployeeProject.objects.get(pk=id)
-    # except:
-    #     return render(request,'emptyProject.html')
-    
-    # context = {
-    #     'current_user' : current_user,
-    #     'singleEmployeeProject' : singleEmployeeProject
-    # }
-
-    # return render(request,'employeeSingleProject.html',context)
-
-
-    
-    
+  

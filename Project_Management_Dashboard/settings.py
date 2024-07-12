@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'Project_Management_Dashboard.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'project_management_db',
+        'NAME': 'project_management_db_final',
         'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'PASSWORD': 'helloworld',
         'HOST': 'localhost',
         'PORT': '5432'
     },
@@ -138,4 +138,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-JET_DEFAULT_THEME = 'light-violet'
+JET_DEFAULT_THEME = 'light-blue'

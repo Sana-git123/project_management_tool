@@ -15,256 +15,23 @@
             </button> -->
             <div class="userDetails">
                 <div class="userImage">
-                    <img
-                        src="{% static '../static/images/user-image.png' %}"
-                        alt="User Image"
-                    />
+                    {% if current_user.employee.profile_image %}
+                        <img src="{{ current_user.employee.profile_image.url }}" alt="User Image">
+                    {% else %}
+                        <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
+                    {% endif %}
                 </div>
-                <p class="userName">Mark Anderson</p>
+                <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
-                    <img
+                    <!-- <img
                         src="{% static '../static/images/dropdown.svg' %}"
                         alt=""
-                    />
+                    /> -->
                 </div>
             </div>
         </div>
     </div>
 </header>
-<div id="createProjectModal" class="modal">
-    <div class="modal-content">
-        <h4>Create Project</h4>
-        <div class="field">
-            <label for="projectName">Project name</label>
-            <input type="text" placeholder="Enter project name" />
-        </div>
-        <div class="field">
-            <label for="projectName">Description</label>
-            <input
-                type="text"
-                class="textInput"
-                placeholder="Type something about project..."
-            />
-        </div>
-        <div class="field">
-            <label for="projectName">Select priority</label>
-            <span class="dropDownList"
-                ><input
-                    type="text"
-                    placeholder="Select project priority" />
-                <div class="downarrow">
-                    <img
-                        src="{% static '../static/images/arrow-down.svg' %}"
-                        alt="drop down arrow"
-                    /></div
-            ></span>
-        </div>
-        <div class="twoFields">
-            <div class="field">
-                <label for="projectName">Assigning date</label>
-                <input type="text" placeholder="DD / MM / YYYY" />
-            </div>
-
-            <div class="field">
-                <label for="projectName">Submission date</label>
-                <input type="text" placeholder="DD / MM / YYYY" />
-            </div>
-        </div>
-        <h6>Team details</h6>
-        <div class="twoFields">
-            <div class="field">
-                <label for="projectName">Project category</label>
-                <span class="dropDownList"
-                    ><input type="text" placeholder="Select team" />
-                    <div class="downarrow">
-                        <img
-                            src="{% static '../static/images/arrow-down.svg' %}"
-                            alt="drop down arrow"
-                        /></div
-                ></span>
-            </div>
-            <div class="field">
-                <label for="projectName">Team lead</label>
-                <span class="dropDownList"
-                    ><input
-                        type="text"
-                        placeholder="Select team lead" />
-                    <div class="downarrow">
-                        <img
-                            src="{% static '../static/images/arrow-down.svg' %}"
-                            alt="drop down arrow"
-                        /></div
-                ></span>
-            </div>
-        </div>
-        <div class="field">
-            <label for="projectName">Assigned to</label>
-            <span class="dropDownList"
-                ><input type="text" placeholder="Select employee" />
-                <div class="downarrow">
-                    <img
-                        src="{% static '../static/images/arrow-down.svg' %}"
-                        alt="drop down arrow"
-                    /></div
-            ></span>
-        </div>
-
-        <div class="createButtons">
-            <button class="close" id="cancel">cancel</button>
-            <button class="create" id="save">Create</button>
-        </div>
-    </div>
-</div>
-
-
-<div id="editProjectModal" class="editModal">
-    <div class="editModal-content">
-        <h4>Edit Project</h4>
-        <div class="field">
-            <label for="projectName">Project name</label>
-            <input type="text" placeholder="Enter project name" value="{{ singleProject.project_name }}"/>
-        </div>
-        <div class="field">
-            <label for="projectName">Description</label>
-            <input
-                type="text"
-                class="textInput"
-                placeholder="Type something about project..."
-                value="{{ singleProject.description }}"
-            />
-        </div>
-        <div class="field">
-            <label for="projectName">Select priority</label>
-            <span class="dropDownList"
-                ><input
-                    type="text"
-                    placeholder="Select project priority" 
-                    value="{{ singleProject.priority }}"
-                    />
-                <div class="downarrow">
-                    <img
-                        src="{% static '../static/images/arrow-down.svg' %}"
-                        alt="drop down arrow"
-                    /></div
-            ></span>
-        </div>
-        <div class="twoFields">
-            <div class="field">
-                <label for="projectName">Assigning date</label>
-                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.assigned_date }}"/>
-            </div>
-
-            <div class="field">
-                <label for="projectName">Submission date</label>
-                <input type="text" placeholder="DD / MM / YYYY" value="{{ singleProject.submission_date }}"/>
-            </div>
-        </div>
-        <h6>Team details</h6>
-        <div class="twoFields">
-            <div class="field">
-                <label for="projectName">Project category</label>
-                <span class="dropDownList"
-                    ><input type="text" placeholder="Select team" value="{{ singleProject.team }}"/>
-                    <div class="downarrow">
-                        <img
-                            src="{% static '../static/images/arrow-down.svg' %}"
-                            alt="drop down arrow"
-                        /></div
-                ></span>
-            </div>
-            <div class="field">
-                <label for="projectName">Team lead</label>
-                <span class="dropDownList"
-                    ><input
-                        type="text"
-                        placeholder="Select team lead"
-                        value="{{ singleProject.team_lead }}" />
-                    <div class="downarrow">
-                        <img
-                            src="{% static '../static/images/arrow-down.svg' %}"
-                            alt="drop down arrow"
-                        /></div
-                ></span>
-            </div>
-        </div>
-        <div class="field">
-            <label for="projectName">Assigned to</label>
-            <span class="dropDownList"
-                ><input type="text" placeholder="Select employee" value="{{ singleProject.employee_name }}" />
-                <div class="downarrow">
-                    <img
-                        src="{% static '../static/images/arrow-down.svg' %}"
-                        alt="drop down arrow"
-                    /></div
-            ></span>
-        </div>
-
-        <div class="createButtons">
-            <button class="close" id="projectCancel">cancel</button>
-            <button class="create" id="projectSave">Create</button>
-        </div>
-    </div>
-</div>
-
-<div id="updateModalContainer" class="updateModal">
-    <div class="update-content">
-        <div class="closeIcon" id="updateClose">
-            <img
-                src="{% static '../static/images/Close.svg' %}"
-                alt="close icon"
-            />
-        </div>
-        <h4>Project updating</h4>
-        <div class="twoField">
-            <div class="field">
-                <label for="projectName">Project name</label>
-                <input
-                    type="text"
-                    placeholder="Updated by"
-                    value="iLM Web app development"
-                />
-            </div>
-            <div class="field">
-                <label for="projectName">Priority</label>
-                <input
-                    type="text"
-                    placeholder="Updated by"
-                    value="Urgent"
-                />
-            </div>
-        </div>
-
-        <div class="field">
-            <label for="projectName">Update Description</label>
-            <textarea
-                type="text"
-                placeholder="Add description..."
-                class="textField"
-                rows="3"
-            ></textarea
-            >
-        </div>
-        
-        <div class="field">
-            <label for="projectName">Select priority</label>
-            <span class="dropDownList"
-                ><input
-                    type="text"
-                    placeholder="Select project priority"
-                    value="On progress" />
-                <div class="downarrow">
-                    <img
-                        src="{% static '../static/images/arrow-down.svg' %}"
-                        alt="drop down arrow"
-                    /></div
-            ></span>
-        </div>
-        <div class="updateButtons">
-            <button class="updateClose" id="updateCancel" type="button" >cancel</button>
-            <button class="updateCreate" id="UpdateSave">Update</button>
-        </div>
-    </div>
-</div>
 
 <div id="logoutModal" class="logoutModal">
     <form class="logoutModal-content" action="{% url 'logout_user' %}" method="POST">
@@ -272,7 +39,7 @@
         <h4>Logout</h4>
         <p>Are you sure want to logout ?</p>
         <div class="createButtons">
-            <button class="close" id="logoutcancel">cancel</button>
+            <button class="close" id="logoutcancel" type="button">cancel</button>
             <button class="create" id="logoutsave">Logout</button>
         </div>
     </form>
@@ -292,15 +59,26 @@
                     Dashboard</a
                 >
             </li>
-            <li class="nav-item">
+            <li class="nav-item active" >
                 <a href="projects"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/dark-project-icon.svg' %}"
+                            src="{% static 'images/white-project-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
                     Projects</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'meetings' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Meetings</a
                 >
             </li>
         </ul>
@@ -325,4 +103,17 @@
     </section>
 </div>
 </div>
+<script>
+    const logout = document.getElementById("logout")
+    const logoutModal = document.getElementById("logoutModal");
+    const logoutCancel = document.getElementById("logoutcancel");
+
+    logout.onclick= () => {
+        logoutModal.style.display="block"
+    }
+
+    logoutCancel.onclick = () => {
+        logoutModal.style.display = "none";
+    };
+</script>
 {% endblock %}

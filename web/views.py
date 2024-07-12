@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from employee.models import Employee
 from project_manager.models import ProjectManager
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -20,6 +21,10 @@ def index(request):
                 role = 'project_manager'
                 login(request, user)
                 return redirect('project-manager/dashboard')
+            elif User.objects.filter(username=username).exists():
+                role = 'admin'
+                login(request, user)
+                return redirect('/admin/')
             else:
                 message = 'user role not exist'
         else:
@@ -37,5 +42,3 @@ def logout_user(request):
     else:
         message = 'No user was logged in.'
     return redirect('/')
-
-

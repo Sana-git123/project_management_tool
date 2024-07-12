@@ -3,10 +3,7 @@
     <div class="container wrapper">
         <h1>
             <a href="#">
-                <img
-                    src="{% static  '../static/images/logo.svg' %}"
-                    alt="Logo"
-                />
+                <img src="{% static  '../static/images/logo.svg' %}" alt="Logo"/>
             </a>
         </h1>
         <div class="right">
@@ -16,17 +13,14 @@
             <div class="userDetails">
                 <div class="userImage">
                     {% if current_user.projectmanager.profile_image %}
-                        <img src="{{ current_user.projectmanager.profile_image.url }}" alt="User Image">
+                    <img src="{{ current_user.projectmanager.profile_image.url }}" alt="User Image">
                     {% else %}
-                        <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
+                    <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
                     {% endif %}
                 </div>
                 <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
-                    <img
-                        src="{% static '../static/images/dropdown.svg' %}"
-                        alt=""
-                    />
+                    <!-- <img src="{% static '../static/images/dropdown.svg' %}" alt=""/> -->
                 </div>
             </div>
         </div>
@@ -91,7 +85,7 @@
                     >
                     <select id="teamLead" name="team_lead">
                         {% for employee in employees %}
-                            <option value="{{employee.id}}">{{ employee.name }}</option>
+                            <option value="{{employee.id}}">{{ employee.name }}[{{ employee.designation }}]</option>
                         {% endfor %}
                     </select>
                 </span>
@@ -219,7 +213,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <h4>Logout</h4>
         <p>Are you sure want to logout ?</p>
         <div class="createButtons">
-            <button class="close" id="logoutcancel">cancel</button>
+            <button class="close" id="logoutcancel" type="button">cancel</button>
             <button class="create" id="logoutsave">Logout</button>
         </div>
     </form>
@@ -228,15 +222,26 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 <div id="container">
     <nav>
         <ul>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a href="dashboard"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/dark-dashboard-icon.svg' %}"
+                            src="{% static 'images/white-dashboard-icon.svg' %}"
                             alt="Dashboard Icon"
                         />
                     </div>
                     Dashboard</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'main_project' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-main-project-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Projects</a
                 >
             </li>
             <li class="nav-item">
@@ -247,7 +252,19 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                             alt="Project Icon"
                         />
                     </div>
-                    Projects</a
+                    Tasks</a
+                >
+            </li>
+            
+            <li class="nav-item">
+                <a href="{% url 'meetings' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Meetings</a
                 >
             </li>
         </ul>
@@ -271,7 +288,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             <div class="left">
                 <div class="iconFrame">
                     <img
-                        src="{% static '/images/dashboard-card-icon.svg' %}"
+                        src="{% static '/images/dark-main-project-icon.svg' %}"
                         alt=""
                     />
                 </div>
@@ -291,7 +308,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 </div>
             </div>
             <div class="right">
-                <p class="miniTitle">Completed projects</p>
+                <p class="miniTitle">Completed tasks</p>
                 <p class="count" id="completedProjectsCount">{{ completed_projects_count }}</p>
             </div>
         </div>
@@ -305,7 +322,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 </div>
             </div>
             <div class="right">
-                <p class="miniTitle">Project in progress</p>
+                <p class="miniTitle">Task in progress</p>
                 <p class="count" id="ongoingProjectsCount">{{ ongoing_projects_count }}</p>
             </div>
         </div>
@@ -319,7 +336,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 </div>
             </div>
             <div class="right">
-                <p class="miniTitle">Projects overdue</p>
+                <p class="miniTitle">Taks overdue</p>
                 <p class="count" id="overdueProjectsCount" >{{ overdue_projects_count }}</p>
             </div>
         </div>
@@ -347,7 +364,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                         alt="Team performance"
                     />
                 </div>
-                <p class="subTitletext">Today’s deadline projects</p>
+                <p class="subTitletext">Today’s deadline taks</p>
             </div>
             <div class="deadlineTable">
                 <table class="tableStyle deadlineTableStyle">
@@ -378,7 +395,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                         alt="Team performance"
                     />
                 </div>
-                <p class="subTitletext">Today assigned projects</p>
+                <p class="subTitletext">Today assigned tasks</p>
             </div>
             <div class="assignedTable">
                 <table class="tableStyle assignedTableStyle">

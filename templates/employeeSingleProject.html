@@ -12,24 +12,25 @@
         <div class="right">
             <div class="userDetails">
                 <div class="userImage">
-                    <img
-                        src="{% static '../static/images/user-image.png' %}"
-                        alt="User Image"
-                    />
+                    {% if current_user.employee.profile_image %}
+                        <img src="{{ current_user.employee.profile_image.url }}" alt="User Image">
+                    {% else %}
+                        <img src="{% static 'images/user-image.png' %}" alt="Default User Image">
+                    {% endif %}
                 </div>
                 <p class="userName">{{ current_user }}</p>
                 <div class="arrow">
-                    <img
+                    <!-- <img
                         src="{% static '../static/images/dropdown.svg' %}"
                         alt=""
-                    />
+                    /> -->
                 </div>
             </div>
         </div>
     </div>
 </header>
 <div id="updateModalContainer" class="updateModal">
-    <form class="update-content" action="{% url 'update' id=singleEmployeeProject.id %}" method="POST">
+    <form class="update-content" action="{% url 'update' id=singleEmployeeProject.id %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="closeIcon" id="updateClose">
             <img
@@ -37,7 +38,7 @@
                 alt="close icon"
             />
         </div>
-        <h4>Project updating</h4>
+        <h4>Task updating</h4>
         <div class="twoField">
             <div class="field">
                 <label for="projectName">Project name</label>
@@ -65,7 +66,6 @@
                 class="textField"
                 rows="3"
                 name="description"
-                
             >
             </textarea>
         </div>
@@ -82,8 +82,12 @@
                 </select>
             </span>
         </div>
+        <div class="field">
+            <label for="projectName">Completed work</label>
+            <input type="file" name="employee_file">
+        </div>
         <div class="updateButtons">
-            <button class="close updateClose" type="submit" formaction="{% url 'cancel_url' %}" formmethod="get">Cancel</button>
+            <button class="close updateClose" type="button" id="updateCancel">Cancel</button>
             <button class="updateCreate" id="UpdateSave">Update</button>
         </div>
     </form>
@@ -115,15 +119,26 @@
                     Dashboard</a
                 >
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a href="/employee/projects?status=all"
                     ><div class="icon">
                         <img
-                            src="{% static 'images/dark-project-icon.svg' %}"
+                            src="{% static 'images/white-project-icon.svg' %}"
                             alt="Project Icon"
                         />
                     </div>
-                    Projects</a
+                    Tasks</a
+                >
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'employee_meeting' %}"
+                    ><div class="icon">
+                        <img
+                            src="{% static '/images/dark-meeting-icon.svg' %}"
+                            alt="Project Icon"
+                        />
+                    </div>
+                    Meetings</a
                 >
             </li>
         </ul>
@@ -143,16 +158,16 @@
         <section id="employeeSingleProject">
             <h4>{{ singleEmployeeProject.project.name}}</h4>
             <ul>
-                <li><a href="/employee/projects?status=all">Projects</a></li>
+                <li><a href="/employee/projects?status=all">Tasks</a></li>
                 <li>&nbsp;/&nbsp;</li>
                 <li>
-                    <a href="#">Project single</a>
+                    <a href="#">{{ singleEmployeeProject.project.name}}</a>
                 </li>
             </ul>
             <div class="center">
                 <div class="content">
                     <div class="contentTitle">
-                        <h3 class="projectTitle">Project details</h3>
+                        <h3 class="projectTitle">Task details</h3>
                         <button class="edit" id="updateProject">Update</button>
                     </div>
                     <div class="titlePair">
@@ -194,6 +209,38 @@
                             <p class="titleContent">
                                 {{ singleEmployeeProject.due_date }}
                             </p>
+                        </div>
+                    </div>
+                    <div class="fullWidth">
+                        <div class="titlePair">
+                            <p class="titleLabel">Assets</p>
+                            {% if singleEmployeeProject.file_field %}
+                            <a href="{{ singleEmployeeProject.file_field.url }}" class="titleContent" style="display: flex; align-items: center; gap: 5px;">
+                                <div class="downloadIcon" style="display: flex; width: 25px;">
+                                    <img src="{% static '/images/download.svg' %}" alt="download icon">
+                                </div>
+                                Download
+                            </a>
+                            {% else %}
+                            <p>
+                                No assets provided
+                            </p>
+                            {% endif %}
+                        </div>
+                        <div class="titlePair">
+                            <p class="titleLabel">Completed work</p>
+                            {% if singleEmployeeProject.employee_file %}
+                            <a href="{{ singleEmployeeProject.employee_file.url }}" class="titleContent" style="display: flex; align-items: center; gap: 5px;">
+                                <div class="downloadIcon" style="display: flex; width: 25px;">
+                                    <img src="{% static '/images/download.svg' %}" alt="download icon">
+                                </div>
+                                Download
+                            </a>
+                            {% else %}
+                            <p>
+                                No work uploaded
+                            </p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

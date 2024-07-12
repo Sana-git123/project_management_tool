@@ -29,6 +29,7 @@ class Employee(models.Model):
     mobile_no = models.CharField(max_length=256)
     user = models.OneToOneField(User,on_delete=models.CASCADE,null=True,blank=True)
     password = models.CharField(max_length=110)
+    profile_image=models.ImageField(upload_to='profile_images/',null=True,blank=True)
 
     class Meta:
         db_table = 'employee_employee'
@@ -49,12 +50,16 @@ class EmployeeProject(models.Model):
     priority = models.CharField(choices=EMPLOYEE_PROJECT_PRIORITY_CHOICES,null=True,blank=True)
     project_status = models.CharField(choices=EMPLOYEE_PROJECT_STATUS_CHOICES,null=True,blank=True)
     description = models.TextField(null=True,blank=True)
+    updated_by = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    updated_on = models.DateField(auto_now=True)
+    file_field = models.FileField(upload_to='assets/',null=True,blank=True)
+    employee_file = models.FileField(upload_to='completed-work/',null=True,blank=True)
 
     class Meta:
         db_table = 'employee_employee_project'
         verbose_name = _('Employee Project')
         verbose_name_plural = _('Employee Projects')
-        ordering = ('priority',)
+        ordering = ('due_date',)
 
     def __str__(self):
         return str(self.priority)
