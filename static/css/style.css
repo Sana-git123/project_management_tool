@@ -534,7 +534,7 @@ header .container .right .blueButton::after {
     border: 1px solid #e4e4e4;
     width: 40%;
     border-radius: 5px;
-    height: 90vh;
+    height: 93vh;
 }
 
 .modal-content h4 {
@@ -840,7 +840,7 @@ header .container .right .blueButton::after {
 #container nav {
     background-color: #ebeffb;
     width: 15%;
-    height: 92vh;
+    height: 91vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
